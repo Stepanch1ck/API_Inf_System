@@ -39,7 +39,7 @@ namespace API_Inf_System.Controllers
             return attributeValue;
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, editor")]
         [HttpPost]
         public async Task<ActionResult<AttributeValue>> CreateAttributeValue(AttributeValue attributeValue)
         {

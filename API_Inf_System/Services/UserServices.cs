@@ -1,6 +1,7 @@
 ﻿using API_Inf_System.DBContext;
 using API_Inf_System.IServices;
 using API_Inf_System.Models;
+using API_Inf_System.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
@@ -40,6 +41,68 @@ namespace API_Inf_System.Services
             return await _context.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        public async Task<User> CreateUserAsync(UserCreateDto userDto)
+        {
+            var newUser = new User
+            {
+                Username = userDto.Username,
+                PasswordHash = HashPassword(userDto.Password),
+                RoleId = userDto.RoleId
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            return newUser;
+        }
+        public static string HashPassword(string password)
+        {
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+            return hashedPassword;
+        }
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UpdateUserAsync(int userId, UserUpdateDto userDto)
+        {
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.Username = userDto.Username;
+            user.RoleId = userDto.RoleId;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
+        }
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .ToListAsync();
         }
     }
 }

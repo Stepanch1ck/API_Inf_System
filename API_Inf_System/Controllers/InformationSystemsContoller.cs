@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API_Inf_System.Controllers
 {
 
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class InformationSystemsController : ControllerBase
@@ -40,14 +40,14 @@ namespace API_Inf_System.Controllers
             return informationSystem;
         }
 
-        //[Authorize(Roles = "admin")]
-        //[HttpPost]
-        //public async Task<ActionResult<InformationSystem>> PostInformationSystem(InformationSystemCreateDto informationSystemDto)
-        //{
-        //    var newInformationSystem = await _informationSystemService.CreateInformationSystemAsync(informationSystemDto);
+        [Authorize(Roles = "admin, editor")]
+        [HttpPost]
+        public async Task<ActionResult<InformationSystem>> PostInformationSystem(InformationSystemCreateDto informationSystemDto)
+        {
+            var newInformationSystem = await _informationSystemService.CreateInformationSystemAsync(informationSystemDto);
 
-        //    return CreatedAtAction(nameof(GetInformationSystem), new { id = newInformationSystem.Id }, newInformationSystem);
-        //}
+            return CreatedAtAction(nameof(GetInformationSystem), new { id = newInformationSystem.Id }, newInformationSystem);
+        }
 
 
         [Authorize(Roles = "admin, editor")]
@@ -130,13 +130,15 @@ namespace API_Inf_System.Controllers
             return await _informationSystemService.GetAllInformationSystemsWithAttributesAsync();
         }
 
-        [HttpPost]
-        public async Task<ActionResult<InformationSystem>> CreateInformationSystemWithAttributes(InformationSystemCreateDto informationSystemDto)
-        {
-            var newInformationSystem = await _informationSystemService.CreateInformationSystemWithAttributesAsync(informationSystemDto);
-            return CreatedAtAction(nameof(GetInformationSystem), newInformationSystem);
-        }
+        //[Authorize(Roles = "admin")]
+        //[HttpPost]
+        //public async Task<ActionResult<InformationSystem>> CreateInformationSystemWithAttributes(InformationSystemCreateDto informationSystemDto)
+        //{
+        //    var newInformationSystem = await _informationSystemService.CreateInformationSystemWithAttributesAsync(informationSystemDto);
+        //    return CreatedAtAction(nameof(GetInformationSystem), newInformationSystem);
+        //}
 
+        [Authorize(Roles = "admin, editor")]
         [HttpPut("{id}/edit-with-attributes")]
         public async Task<IActionResult> EditInformationSystemWithAttributes(int id, InformationSystemEditDto informationSystemDto)
         {
