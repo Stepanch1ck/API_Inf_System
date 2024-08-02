@@ -20,12 +20,12 @@ namespace API_Inf_System.Controllers
             _informationSystemService = informationSystemService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<InformationSystemDto>>> GetInformationSystems()
-        {
-            var informationSystems = await _informationSystemService.GetAllInformationSystemsAsync();
-            return Ok(informationSystems);
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<InformationSystemDto>>> GetInformationSystems()
+        //{
+        //    var informationSystems = await _informationSystemService.GetAllInformationSystemsAsync();
+        //    return Ok(informationSystems);
+        //}
 
         [HttpGet("{id}")]
         public async Task<ActionResult<InformationSystemDto>> GetInformationSystem(int id)
@@ -50,43 +50,25 @@ namespace API_Inf_System.Controllers
         }
 
 
-        [Authorize(Roles = "admin, editor")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutInformationSystem(int id, InformationSystemUpdateDto informationSystemDto)
-        {
-            if (id != informationSystemDto.Id)
-            {
-                return BadRequest();
-            }
 
-            var isUpdated = await _informationSystemService.UpdateInformationSystemAsync(id, informationSystemDto);
+        //[Authorize(Roles = "admin, editor")]
+        //[HttpPut("{id}/attributes")]
+        //public async Task<IActionResult> PutInformationSystemAttributes(int id, InformationSystemAttributeUpdateDto informationSystemDto)
+        //{
+        //    //if (id != informationSystemDto.Id)
+        //    //{
+        //    //    return BadRequest();
+        //    //}
 
-            if (!isUpdated)
-            {
-                return NotFound();
-            }
+        //    var isUpdated = await _informationSystemService.UpdateInformationSystemAttributesAsync(id, informationSystemDto);
 
-            return NoContent();
-        }
+        //    if (!isUpdated)
+        //    {
+        //        return NotFound();
+        //    }
 
-        [Authorize(Roles = "admin, editor")]
-        [HttpPut("{id}/attributes")]
-        public async Task<IActionResult> PutInformationSystemAttributes(int id, InformationSystemAttributeUpdateDto informationSystemDto)
-        {
-            //if (id != informationSystemDto.Id)
-            //{
-            //    return BadRequest();
-            //}
-
-            var isUpdated = await _informationSystemService.UpdateInformationSystemAttributesAsync(id, informationSystemDto);
-
-            if (!isUpdated)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
@@ -113,16 +95,16 @@ namespace API_Inf_System.Controllers
             return details;
         }
 
-        [Authorize(Roles = "admin, editor")]
-        [HttpPut("{id}/edit")]
-        public async Task<IActionResult> EditInformationSystem(int id, InformationSystemEditDto informationSystemDto)
-        {
-            if (await _informationSystemService.EditInformationSystemAsync(id, informationSystemDto))
-            {
-                return NoContent();
-            }
-            return NotFound();
-        }
+        //[Authorize(Roles = "admin, editor")]
+        //[HttpPut("{id}/edit")]
+        //public async Task<IActionResult> EditInformationSystem(int id, InformationSystemEditDto informationSystemDto)
+        //{
+        //    if (await _informationSystemService.EditInformationSystemAsync(id, informationSystemDto))
+        //    {
+        //        return NoContent();
+        //    }
+        //    return NotFound();
+        //}
 
         [HttpGet("with-attributes")]
         public async Task<ActionResult<List<InformationSystemWithAttributesDto>>> GetAllInformationSystemsWithAttributes()

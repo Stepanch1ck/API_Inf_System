@@ -17,29 +17,29 @@ namespace API_Inf_System.Services
             _attributeService = attributeService;
             _attributeValueService = attributeValueService;
         }
-        public async Task<List<InformationSystemDto>> GetAllInformationSystemsAsync()
-        {
-            var informationSystems = await _context.InformationSystems
-        .Include(isEntity => isEntity.AttributeValues)
-        .ThenInclude(av => av.Attribute)
-        .ToListAsync();
+        //public async Task<List<InformationSystemDto>> GetAllInformationSystemsAsync()
+        //{
+        //    var informationSystems = await _context.InformationSystems
+        //.Include(isEntity => isEntity.AttributeValues)
+        //.ThenInclude(av => av.Attribute)
+        //.ToListAsync();
 
-            var informationSystemDtos = informationSystems.Select(isEntity => new InformationSystemDto
-            {
-                Id = isEntity.Id,
-                Name = isEntity.Name,
-                Attributes = isEntity.AttributeValues
-            .GroupBy(av => av.Attribute.Name)
-            .Select(group => new AttributeDto
-            {
-                Id = group.First().AttributeId,
-                Name = group.Key,
-                DataType = group.First().Attribute.DataType,
-            })
-            .ToList()
-            }).ToList();
-            return informationSystemDtos;
-        }
+        //    var informationSystemDtos = informationSystems.Select(isEntity => new InformationSystemDto
+        //    {
+        //        Id = isEntity.Id,
+        //        Name = isEntity.Name,
+        //        Attributes = isEntity.AttributeValues
+        //    .GroupBy(av => av.Attribute.Name)
+        //    .Select(group => new AttributeDto
+        //    {
+        //        Id = group.First().AttributeId,
+        //        Name = group.Key,
+        //        DataType = group.First().Attribute.DataType,
+        //    })
+        //    .ToList()
+        //    }).ToList();
+        //    return informationSystemDtos;
+        //}
         public async Task<InformationSystemDto> GetInformationSystemByIdAsync(int id)
         {
             var informationSystem = await _context.InformationSystems
@@ -94,101 +94,101 @@ namespace API_Inf_System.Services
 
             return newInformationSystem;
         }
-        public async Task<bool> UpdateInformationSystemAsync(int id, InformationSystemUpdateDto informationSystemDto)
-        {
-            var informationSystem = await _context.InformationSystems
-        .Include(iS => iS.AttributeValues)
-        .ThenInclude(av => av.Attribute)
-        .FirstOrDefaultAsync(iS => iS.Id == informationSystemDto.Id);
-            if (informationSystem == null)
-            {
-                return false;
-            }
+        //public async Task<bool> UpdateInformationSystemAsync(int id, InformationSystemUpdateDto informationSystemDto)
+        //{
+        //    var informationSystem = await _context.InformationSystems
+        //.Include(iS => iS.AttributeValues)
+        //.ThenInclude(av => av.Attribute)
+        //.FirstOrDefaultAsync(iS => iS.Id == informationSystemDto.Id);
+        //    if (informationSystem == null)
+        //    {
+        //        return false;
+        //    }
 
-            informationSystem.Name = informationSystemDto.Name;
-            informationSystem.UpdatedAt = DateTime.Now;
+        //    informationSystem.Name = informationSystemDto.Name;
+        //    informationSystem.UpdatedAt = DateTime.Now;
 
-            if (informationSystemDto.Attributes.Any())
-            {
-                foreach (var attributeDto in informationSystemDto.Attributes)
-                {
-                    var attributeName = attributeDto.Name;
-                    var dataType = attributeDto.DataType;
+        //    if (informationSystemDto.Attributes.Any())
+        //    {
+        //        foreach (var attributeDto in informationSystemDto.Attributes)
+        //        {
+        //            var attributeName = attributeDto.Name;
+        //            var dataType = attributeDto.DataType;
 
-                    var attribute = await _attributeService.GetOrCreateAttributeByNameAsync(attributeName, dataType);
-                    if (attribute != null)
-                    {
-                        attribute.DataType = dataType;
-                        await _context.SaveChangesAsync();
-                    }
-                }
-            }
+        //            var attribute = await _attributeService.GetOrCreateAttributeByNameAsync(attributeName, dataType);
+        //            if (attribute != null)
+        //            {
+        //                attribute.DataType = dataType;
+        //                await _context.SaveChangesAsync();
+        //            }
+        //        }
+        //    }
             
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-        }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        return false;
+        //    }
+        //}
 
-        public async Task<bool> UpdateInformationSystemAttributesAsync(int id, InformationSystemAttributeUpdateDto informationSystemDto)
-        {
-            var informationSystem = await _context.InformationSystems
-                .Include(IS => IS.AttributeValues)
-                .ThenInclude(av => av.Attribute)
-                .FirstOrDefaultAsync(IS => IS.Id == id);
+        //public async Task<bool> UpdateInformationSystemAttributesAsync(int id, InformationSystemAttributeUpdateDto informationSystemDto)
+        //{
+        //    var informationSystem = await _context.InformationSystems
+        //        .Include(IS => IS.AttributeValues)
+        //        .ThenInclude(av => av.Attribute)
+        //        .FirstOrDefaultAsync(IS => IS.Id == id);
 
-            if (informationSystem == null)
-            {
-                return false;
-            }
+        //    if (informationSystem == null)
+        //    {
+        //        return false;
+        //    }
 
-            foreach (var attributePair in informationSystemDto.Attributes)
-            {
-                var attributeName = attributePair.Key;
-                var newAttributeValues = attributePair.Value;
+        //    foreach (var attributePair in informationSystemDto.Attributes)
+        //    {
+        //        var attributeName = attributePair.Key;
+        //        var newAttributeValues = attributePair.Value;
 
-                var existingAttributeValues = informationSystem.AttributeValues
-                    .Where(av => av.Attribute.Name.ToLower() == attributeName.ToLower())
-                    .ToList();
+        //        var existingAttributeValues = informationSystem.AttributeValues
+        //            .Where(av => av.Attribute.Name.ToLower() == attributeName.ToLower())
+        //            .ToList();
 
-                foreach (var existingAttributeValue in existingAttributeValues)
-                {
-                    var matchingNewValue = newAttributeValues.FirstOrDefault(v => v == existingAttributeValue.Value);
-                    if (matchingNewValue != null)
-                    {
-                        newAttributeValues.Remove(matchingNewValue);
-                    }
-                    else
-                    {
-                        _context.AttributeValues.Remove(existingAttributeValue);
-                    }
-                }
-                foreach (var newAttributeValue in newAttributeValues)
-                {
-                    var attributeDto = await _attributeService.GetOrCreateAttributeByNameAsync(attributeName, "string");
-                    if (attributeDto != null)
-                    {
-                        await _attributeValueService.CreateAttributeValueAsync(informationSystem.Id, attributeDto.Id, newAttributeValue);
-                    }
-                }
-            }
+        //        foreach (var existingAttributeValue in existingAttributeValues)
+        //        {
+        //            var matchingNewValue = newAttributeValues.FirstOrDefault(v => v == existingAttributeValue.Value);
+        //            if (matchingNewValue != null)
+        //            {
+        //                newAttributeValues.Remove(matchingNewValue);
+        //            }
+        //            else
+        //            {
+        //                _context.AttributeValues.Remove(existingAttributeValue);
+        //            }
+        //        }
+        //        foreach (var newAttributeValue in newAttributeValues)
+        //        {
+        //            var attributeDto = await _attributeService.GetOrCreateAttributeByNameAsync(attributeName, "string");
+        //            if (attributeDto != null)
+        //            {
+        //                await _attributeValueService.CreateAttributeValueAsync(informationSystem.Id, attributeDto.Id, newAttributeValue);
+        //            }
+        //        }
+        //    }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-        }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public async Task<bool> DeleteInformationSystemAsync(int id)
         {
@@ -233,42 +233,42 @@ namespace API_Inf_System.Services
             return infoSystemDetailsDto;
         }
 
-        public async Task<bool> EditInformationSystemAsync(int id, InformationSystemEditDto informationSystemDto)
-        {
-            var informationSystem = await _context.InformationSystems
-                .Include(iS => iS.AttributeValues)
-                .ThenInclude(av => av.Attribute)
-                .FirstOrDefaultAsync(iS => iS.Id == id);
+        //public async Task<bool> EditInformationSystemAsync(int id, InformationSystemEditDto informationSystemDto)
+        //{
+        //    var informationSystem = await _context.InformationSystems
+        //        .Include(iS => iS.AttributeValues)
+        //        .ThenInclude(av => av.Attribute)
+        //        .FirstOrDefaultAsync(iS => iS.Id == id);
 
-            if (informationSystem == null)
-            {
-                return false;
-            }
+        //    if (informationSystem == null)
+        //    {
+        //        return false;
+        //    }
 
-            informationSystem.Name = informationSystemDto.Name;
-            informationSystem.UpdatedAt = DateTime.Now;
+        //    informationSystem.Name = informationSystemDto.Name;
+        //    informationSystem.UpdatedAt = DateTime.Now;
 
-            _context.AttributeValues.RemoveRange(informationSystem.AttributeValues);
+        //    _context.AttributeValues.RemoveRange(informationSystem.AttributeValues);
 
-            foreach (var attributeDto in informationSystemDto.Attributes)
-            {
-                var attribute = await _attributeService.GetOrCreateAttributeByNameAsync(attributeDto.Name, "string"); 
-                if (attribute != null)
-                {
-                    await _attributeValueService.CreateAttributeValueAsync(informationSystem.Id, attribute.Id, attributeDto.Value);
-                }
-            }
+        //    foreach (var attributeDto in informationSystemDto.Attributes)
+        //    {
+        //        var attribute = await _attributeService.GetOrCreateAttributeByNameAsync(attributeDto.Name, "string"); 
+        //        if (attribute != null)
+        //        {
+        //            await _attributeValueService.CreateAttributeValueAsync(informationSystem.Id, attribute.Id, attributeDto.Value);
+        //        }
+        //    }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-        }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        return false;
+        //    }
+        //}
         public async Task<List<InformationSystemWithAttributesDto>> GetAllInformationSystemsWithAttributesAsync()
         {
             var informationSystems = await _context.InformationSystems
