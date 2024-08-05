@@ -53,13 +53,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowMyFrontend",
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:3000")
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
-        });
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000");
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+    });
 });
 
 
@@ -74,7 +73,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowMyFrontend");
+app.UseCors();
 
 app.UseAuthorization();
 
