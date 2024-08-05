@@ -12,6 +12,5 @@
             this.Login = login;
             this.Password = password.GetHashCode();
         }
-        public User() { }
     }
 }
