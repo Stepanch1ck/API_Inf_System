@@ -9,12 +9,13 @@ namespace RegisterOfInformationSystems.Core.Interfaces
 {
     public interface IActionsOnTheInformationSystem
     {
-        Task<bool> CreateInformationSystem(string name, string description, Dictionary<Models.Attribute, string> attributes);
+        Task<bool> CreateInformationSystem(string name, string description, List<string> keys, List<string> values);
         Task<bool> DeleteInformationSystem(string name);
-        Task<bool> UpdateInformationSystem(string name, Dictionary<Models.Attribute, string> attributes);
-        Task<List<InformationSystem>> GetInformationSystemsByPartOfName(string partOfName);
-        Task<List<InformationSystem>> GetInformationSystemsByAttributeContain(string state);
-        Task<bool> SetAttributeToInformationalSystem(string name, Models.Attribute attribute, string state);
+        Task<bool> UpdateInformationSystem(string name, List<string> keys, List<string> values);
+        List<InformationSystem> GetInformationSystemsByPartOfName(string partOfName);
+        InformationSystem? GetInformationSystemByFullName(string fullName);
+        List<InformationSystem> GetInformationSystemsByAttributeContain(string attribute);
+        Task<bool> SetAttributeToInformationalSystem(string name, string attribute, string state);
 
     }
 }

@@ -12,13 +12,13 @@ namespace InfSystemsAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateNewAttribute([FromBody] CreateAttributeRequest request)
         {
-            if (!_dbContext.Attributes.Where(attr => attr.Name.ToLower() == request.Name.ToLower()).Any())
+            if (!_dbContext.Attributes.Where(attr => attr.Name.Equals(request.Name)).Any())
             {
                 await _dbContext.Attributes.AddAsync(new Models.Attribute(request.Name, request.Description, request.States));
                 await _dbContext.SaveChangesAsync();
                 return Ok("created");
             }
-            else if(_dbContext.Attributes.Where(attr => attr.Name.ToLower() == request.Name.ToLower()).Any())
+            else if(_dbContext.Attributes.Where(attr => attr.Name.Equals(request.Name)).Any())
             {
                 return Ok("uzhe est");
             }
@@ -31,14 +31,14 @@ namespace InfSystemsAPI.Controllers
             {
                 return Ok(_dbContext.Attributes.Where(attr => true));
             }
-            return Ok(_dbContext.Attributes.Where(attr => attr.Name.ToLower().Contains(request.Search.ToLower())));
+            return Ok(_dbContext.Attributes.Where(attr => attr.Name.Equals(request.Search)));
         }
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteAttribute([FromBody]DeleteAttribute request)
         {
-            if (_dbContext.Attributes.Where(attr => attr.Name.ToLower() == request.Name.ToLower()).Any())
+            if (_dbContext.Attributes.Where(attr => attr.Name.Equals(request.Name)).Any())
             {
-                _dbContext.Remove(_dbContext.Attributes.Where(attr => attr.Name.ToLower() == request.Name.ToLower()).ToArray()[0]);
+                _dbContext.Remove(_dbContext.Attributes.Where(attr => attr.Name.Equals(request.Name)).ToArray()[0]);
                 await _dbContext.SaveChangesAsync();
                 return Ok("deleted");
             }

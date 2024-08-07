@@ -13,7 +13,7 @@ namespace InfSystemsAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateRole([FromBody]RoleCreatingRequest request)
         {
-            if (_dbContext.Roles.Where(role => role.Name.ToLower() == request.Name.ToLower()).Count() == 0)
+            if (_dbContext.Roles.Where(role => role.Name.Equals(request.Name)).Any())
             {
                 await _dbContext.Roles.AddAsync(new Role(request.Power, request.Name, request.Description));
                 await _dbContext.SaveChangesAsync();
@@ -24,9 +24,9 @@ namespace InfSystemsAPI.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteRole([FromBody]RoleDeletingRequest request)
         {
-            if(_dbContext.Roles.Where(role => role.Name.ToLower() == request.Name.ToLower()).Count()>0)
+            if(_dbContext.Roles.Where(role => role.Name.Equals(request.Name)).Any())
             {
-                _dbContext.Roles.Remove(_dbContext.Roles.Where(role => role.Name.ToLower() == request.Name.ToLower()).ToArray()[0]);
+                _dbContext.Roles.Remove(_dbContext.Roles.Where(role => role.Name.Equals(request.Name)).ToArray()[0]);
                 await _dbContext.SaveChangesAsync();
                 return Ok("role deleted");
             }

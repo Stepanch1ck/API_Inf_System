@@ -1,4 +1,4 @@
-﻿using RegisterOfInformationSystems.Core.Models;
+﻿ using RegisterOfInformationSystems.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace RegisterOfInformationSystems.Core.Interfaces
 {
     public interface IActionsOnTheUser
     {
-        Task<User> GetByLogin(string login);
-        Task<List<User>> GetByRole(string role);
+        User? GetByLogin(string login);
+        Task<List<User>?> GetByRole(string role);
         Task<bool> LogInPermission(string login, string password);
-        Task<bool> CreateUser(string login, string password);
+        Task<bool> CreateUser(string login, string password, int rolePower);
         Task<bool> DeleteUser(string login);
         Task<bool> ChangePassword(string login, string newPassword);
     }

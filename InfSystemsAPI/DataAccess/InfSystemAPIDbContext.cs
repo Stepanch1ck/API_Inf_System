@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace InfSystemsAPI.DataAccess
 {
-    public class InfSystemAPIDbContext : DbContext
+    public class InfSystemAPIDbContext(IConfiguration configuration) : DbContext
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration = configuration;
 
         public DbSet<User> Users => Set<User>();
         public DbSet<InfSystem> InfSystems => Set<InfSystem>();
@@ -17,10 +17,6 @@ namespace InfSystemsAPI.DataAccess
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Database"));
-        }
-        public InfSystemAPIDbContext(IConfiguration configuration)
-        {
-            this._configuration = configuration;    
         }
     }
 }

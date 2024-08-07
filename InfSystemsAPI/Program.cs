@@ -1,5 +1,4 @@
 using InfSystemsAPI.DataAccess;
-using InfSystemsAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
