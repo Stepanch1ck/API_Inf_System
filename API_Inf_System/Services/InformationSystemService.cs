@@ -68,32 +68,32 @@ namespace API_Inf_System.Services
 
             return infoSystemDto;
         }
-        public async Task<InformationSystem> CreateInformationSystemAsync(InformationSystemCreateDto informationSystemDto)
-        {
-            var newInformationSystem = new InformationSystem
-            {
-                Name = informationSystemDto.Name,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
+        //public async Task<InformationSystem> CreateInformationSystemAsync(InformationSystemCreateDto informationSystemDto)
+        //{
+        //    var newInformationSystem = new InformationSystem
+        //    {
+        //        Name = informationSystemDto.Name,
+        //        CreatedAt = DateTime.Now,
+        //        UpdatedAt = DateTime.Now
+        //    };
 
-            _context.InformationSystems.Add(newInformationSystem);
-            await _context.SaveChangesAsync();
+        //    _context.InformationSystems.Add(newInformationSystem);
+        //    await _context.SaveChangesAsync();
 
-            foreach (var attributeDto in informationSystemDto.Attributes)
-            {
-                var attribute = await _attributeService.GetOrCreateAttributeByNameAsync(attributeDto.Name, attributeDto.DataType);
+        //    foreach (var attributeDto in informationSystemDto.Attributes)
+        //    {
+        //        var attribute = await _attributeService.GetOrCreateAttributeByNameAsync(attributeDto.Name, attributeDto.DataType);
 
-                if (attribute != null)
-                {
-                    await _attributeValueService.CreateAttributeValueAsync(newInformationSystem.Id, attribute.Id, attributeDto.DataType);
-                }
-            }
+        //        if (attribute != null)
+        //        {
+        //            await _attributeValueService.CreateAttributeValueAsync(newInformationSystem.Id, attribute.Id, attributeDto.DataType);
+        //        }
+        //    }
 
-            await _context.SaveChangesAsync();
+        //    await _context.SaveChangesAsync();
 
-            return newInformationSystem;
-        }
+        //    return newInformationSystem;
+        //}
         //public async Task<bool> UpdateInformationSystemAsync(int id, InformationSystemUpdateDto informationSystemDto)
         //{
         //    var informationSystem = await _context.InformationSystems
@@ -290,46 +290,44 @@ namespace API_Inf_System.Services
                     .ToList()
             }).ToList();
         }
-        //public async Task<InformationSystemCreateDto> CreateInformationSystemWithAttributesAsync(InformationSystemCreateDto informationSystemDto)
-        //{
-        //    var newInformationSystem = new InformationSystem
-        //    {
-        //        Name = informationSystemDto.Name,
-        //        CreatedAt = DateTime.Now,
-        //        UpdatedAt = DateTime.Now,
-        //        AttributeValues = new List<AttributeValue>()
-        //    };
+        public async Task<InformationSystemCreateDto> CreateInformationSystemWithAttributesAsync(InformationSystemCreateDto informationSystemDto)
+        {
+            var newInformationSystem = new InformationSystem
+            {
+                Name = informationSystemDto.Name,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+            };
 
-        //    _context.InformationSystems.Add(newInformationSystem);
-        //    await _context.SaveChangesAsync();
+            _context.InformationSystems.Add(newInformationSystem);
+            await _context.SaveChangesAsync();
 
-        //    foreach (var attributeDto in informationSystemDto.Attributes)
-        //    {
-        //        var attribute = await _attributeService.GetOrCreateAttributeByNameAsync(attributeDto.Name, "string");
-
-        //        if (attribute == null) 
-        //        {
-        //            var newAttributeValue = await _attributeValueService.CreateAttributeValueAsync(
-        //                newInformationSystem.Id,
-        //                attribute.Id,
-        //                attributeDto.Value
-        //            );
-        //            newInformationSystem.AttributeValues.Add(newAttributeValue);
-        //        }
-        //    }
-        //    await _context.SaveChangesAsync();
-        //    return new InformationSystemCreateDto
-        //    {
-        //        //Id = newInformationSystem.Id,
-        //        Name = newInformationSystem.Name,
-        //        Attributes = newInformationSystem.AttributeValues.Select(av => new AttributeWithValueDto
-        //        {
-        //            Id = av.AttributeId,
-        //            Name = av.Attribute.Name,
-        //            Value = av.Value
-        //        }).ToList()
-        //    };
-        //}
+            foreach (var attributeDto in informationSystemDto.Attributes)
+            {
+                var attributeExists = await _context.Attributes.AnyAsync(a => a.Id == attributeDto.Id);
+                if (!attributeExists)
+                {
+                    Console.WriteLine("Eror");
+                }
+                else
+                {
+                    var newAttributeValue = await _attributeValueService.CreateAttributeValueAsync(newInformationSystem.Id, attributeDto.Id, attributeDto.Value);
+                }
+            }
+            await _context.SaveChangesAsync();
+            var createdInformationSystemDto = new InformationSystemCreateDto
+            {
+                Id = newInformationSystem.Id,
+                Name = newInformationSystem.Name,
+                Attributes = informationSystemDto.Attributes.Select(a => new AttributeWithValueDto
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    Value = a.Value,
+                }).ToList()
+            };
+            return createdInformationSystemDto;
+        }
 
         public async Task<bool> EditInformationSystemWithAttributesAsync(int id, InformationSystemEditDto informationSystemDto)
         {
