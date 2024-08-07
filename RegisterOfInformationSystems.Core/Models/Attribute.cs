@@ -11,8 +11,11 @@ namespace RegisterOfInformationSystems.Core.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<string> States { get; set; }
-        public Attribute(string name, string description, List<string> states)
+        public ICollection<AttributeStatement> States { get; set; } = [];
+        public List<AttributeStatement> states { get; set; }
+        public ICollection<InformationSystem> InformationSystems { get; set; }
+        public Attribute() { }
+        public Attribute(string name, string description, List<AttributeStatement> states)
         {
             Name = name;
             Description = description;

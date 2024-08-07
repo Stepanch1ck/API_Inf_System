@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RegisterOfInformationSystems.Core.Models
 {
@@ -12,13 +9,20 @@ namespace RegisterOfInformationSystems.Core.Models
 
         public string Login { get; set; }
 
-        public int Password { get; set; }
-        public Role Role { get; set; }
-        public User(string login, string password)
+        public string Password { get; set; }
+        public Role? Role { get; set; }
+        public Guid RoleId { get; set; }
+        public User(string login, string password, Role role)
         {
             this.Login = login;
-            this.Password = password.GetHashCode();
+            this.Password = GetSHA256(password);
+            this.Role = role;
         }
         public User() { }
+        private static string GetSHA256(string password)
+        {
+            var byteArray = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+            return Convert.ToHexString(byteArray);
+        }
     }
 }

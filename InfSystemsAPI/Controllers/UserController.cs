@@ -14,7 +14,7 @@ namespace InfSystemsAPI.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistration request)
         {
-            if (_dbContext.Users.Where(user => user.Login == request.Username).Count() == 0)
+            if (_dbContext.Users.Where(user => user.Login == request.Username).Any())
             {
                 var user = new User(request.Username, request.Password);
                 await _dbContext.Users.AddAsync(user);
@@ -30,7 +30,7 @@ namespace InfSystemsAPI.Controllers
         {
             if (_dbContext.Users.Where(user => user.Login == request.Username).Count() == 1)
             {
-                _dbContext.Users.Remove(_dbContext.Users.Where(user => user.Login.ToLower() == request.Username.ToLower()).ToArray()[0]);
+                _dbContext.Users.Remove(_dbContext.Users.Where(user => user.Login.Equals(request.Username)).ToArray()[0]);
                 await _dbContext.SaveChangesAsync();
                 return Ok("Deleted");
             }

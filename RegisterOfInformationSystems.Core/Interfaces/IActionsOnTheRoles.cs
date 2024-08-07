@@ -9,6 +9,7 @@ namespace RegisterOfInformationSystems.Core.Interfaces
 {
     public interface IActionsOnTheRoles
     {
-        public Task<Role> GetRolePowerOf(int power);
+        public Role? GetRolePowerOf(int power);
+        public Role? GetRoleByName(string name);
     }
 }
