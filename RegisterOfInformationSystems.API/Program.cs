@@ -33,10 +33,10 @@ var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
 using var dbContext = scope.ServiceProvider.GetService<PostgresDbContext>();
-dbContext.Database.Migrate();
+
 dbContext.Database.EnsureCreated();
 
-
+dbContext.Database.Migrate();
 
 
 

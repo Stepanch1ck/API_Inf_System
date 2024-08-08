@@ -11,5 +11,6 @@ namespace RegisterOfInformationSystems.Core.Interfaces
     {
         public Role? GetRolePowerOf(int power);
         public Role? GetRoleByName(string name);
+        public List<Role> GetAllRoles();
     }
 }

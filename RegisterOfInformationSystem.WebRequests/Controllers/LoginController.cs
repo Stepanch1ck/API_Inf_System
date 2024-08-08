@@ -20,13 +20,15 @@ namespace InfSystemsAPI.Controllers
         [HttpGet("signin")]
         public async Task<IActionResult> IsUserValid([FromQuery] UserValidation request)
         {
+            var response = false;
             HttpContext context = this.Accessor.HttpContext;
-            if (await _userService.LogInPermission(request.Username, request.Password))
+            if (_userService.LogInPermission(request.Username, request.Password))
             {
                 context.Response.Cookies.Append("role", (_userService.GetByLogin(request.Username)).Role.Name);
-                return Ok(true);
+                response = true;
+                return Ok(response);
             }
-            return Ok(false);
+            return Ok(response);
         }
     }
 }

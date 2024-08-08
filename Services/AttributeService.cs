@@ -90,7 +90,7 @@ namespace Services
         public List<Attribute>? GetAttributesByPartOfName(string partOfName)
         {
             #region Вытащить аттрибуты с БД
-            var attributes = _dbContext.Attributes.Where(attribute => attribute.Name.Contains(partOfName));
+            var attributes = _dbContext.Attributes.Include(a => a.States).Where(attribute => attribute.Name.Contains(partOfName));
             #endregion
 
             #region Вернуть null если аттрибутов нет

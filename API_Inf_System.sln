@@ -12,21 +12,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 		README.txt = README.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterOfInformationSystems.Core", "RegisterOfInformationSystems.Core\RegisterOfInformationSystems.Core.csproj", "{74C84935-EFB3-4F19-A0BB-D56A13A593F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterOfInformationSystems.Core", "RegisterOfInformationSystems.Core\RegisterOfInformationSystems.Core.csproj", "{74C84935-EFB3-4F19-A0BB-D56A13A593F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterOfInformationSystems.Database", "RegisterOfInformationSystems.Database\RegisterOfInformationSystems.Database.csproj", "{3191D273-B249-4BFE-8AD9-5CF2AE525CF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterOfInformationSystems.Database", "RegisterOfInformationSystems.Database\RegisterOfInformationSystems.Database.csproj", "{3191D273-B249-4BFE-8AD9-5CF2AE525CF3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{74C84935-EFB3-4F19-A0BB-D56A13A593F3} = {74C84935-EFB3-4F19-A0BB-D56A13A593F3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterOfInformationSystems.Service", "Services\RegisterOfInformationSystems.Service.csproj", "{04424BED-A0BF-4041-8F5A-7EA8C2BBEB21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterOfInformationSystems.Service", "Services\RegisterOfInformationSystems.Service.csproj", "{04424BED-A0BF-4041-8F5A-7EA8C2BBEB21}"
 	ProjectSection(ProjectDependencies) = postProject
 		{74C84935-EFB3-4F19-A0BB-D56A13A593F3} = {74C84935-EFB3-4F19-A0BB-D56A13A593F3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterOfInformationSystems.API", "RegisterOfInformationSystems.API\RegisterOfInformationSystems.API.csproj", "{EDD4593E-55DB-4B96-8E18-A41F70132B8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterOfInformationSystems.API", "RegisterOfInformationSystems.API\RegisterOfInformationSystems.API.csproj", "{EDD4593E-55DB-4B96-8E18-A41F70132B8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterOfInformationSystem.WebRequests", "RegisterOfInformationSystem.WebRequests\RegisterOfInformationSystem.WebRequests.csproj", "{36E83615-BF66-4406-B7D5-D5B2C18A7B12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterOfInformationSystem.WebRequests", "RegisterOfInformationSystem.WebRequests\RegisterOfInformationSystem.WebRequests.csproj", "{36E83615-BF66-4406-B7D5-D5B2C18A7B12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4E2C845F-36A4-4EF5-9B4B-03E4AEB18D56}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

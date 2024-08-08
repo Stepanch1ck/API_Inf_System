@@ -1,6 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace RegisterOfInformationSystems.Database.Migrations
 {
@@ -40,7 +44,8 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RolePower = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false)
@@ -76,7 +81,7 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttributeInformationSystem",
+                name: "IStoAtributes",
                 columns: table => new
                 {
                     AttributesId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -84,15 +89,15 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AttributeInformationSystem", x => new { x.AttributesId, x.InformationSystemsId });
+                    table.PrimaryKey("PK_IStoAtributes", x => new { x.AttributesId, x.InformationSystemsId });
                     table.ForeignKey(
-                        name: "FK_AttributeInformationSystem_Attributes_AttributesId",
+                        name: "FK_IStoAtributes_Attributes_AttributesId",
                         column: x => x.AttributesId,
                         principalTable: "Attributes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AttributeInformationSystem_InfSystems_InformationSystemsId",
+                        name: "FK_IStoAtributes_InfSystems_InformationSystemsId",
                         column: x => x.InformationSystemsId,
                         principalTable: "InfSystems",
                         principalColumn: "Id",
@@ -103,10 +108,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Login = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
+                    RoleId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -120,7 +126,7 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttributeStatementInformationSystem",
+                name: "IStoAtStatements",
                 columns: table => new
                 {
                     AttributeStatementsId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -128,30 +134,30 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AttributeStatementInformationSystem", x => new { x.AttributeStatementsId, x.InformationSystemsId });
+                    table.PrimaryKey("PK_IStoAtStatements", x => new { x.AttributeStatementsId, x.InformationSystemsId });
                     table.ForeignKey(
-                        name: "FK_AttributeStatementInformationSystem_AttributeStatements_Att~",
+                        name: "FK_IStoAtStatements_AttributeStatements_AttributeStatementsId",
                         column: x => x.AttributeStatementsId,
                         principalTable: "AttributeStatements",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AttributeStatementInformationSystem_InfSystems_InformationS~",
+                        name: "FK_IStoAtStatements_InfSystems_InformationSystemsId",
                         column: x => x.InformationSystemsId,
                         principalTable: "InfSystems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_AttributeInformationSystem_InformationSystemsId",
-                table: "AttributeInformationSystem",
-                column: "InformationSystemsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AttributeStatementInformationSystem_InformationSystemsId",
-                table: "AttributeStatementInformationSystem",
-                column: "InformationSystemsId");
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Description", "Name", "RolePower" },
+                values: new object[,]
+                {
+                    { -3, "Can Take Information", "Reader", 3 },
+                    { -2, "Can Edit Information Systems", "Editor", 2 },
+                    { -1, "Can do anything", "admin", 1 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AttributeStatements_AttributeId",
@@ -164,6 +170,16 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 column: "AttributeId1");
 
             migrationBuilder.CreateIndex(
+                name: "IX_IStoAtributes_InformationSystemsId",
+                table: "IStoAtributes",
+                column: "InformationSystemsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IStoAtStatements_InformationSystemsId",
+                table: "IStoAtStatements",
+                column: "InformationSystemsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
@@ -173,10 +189,10 @@ namespace RegisterOfInformationSystems.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AttributeInformationSystem");
+                name: "IStoAtributes");
 
             migrationBuilder.DropTable(
-                name: "AttributeStatementInformationSystem");
+                name: "IStoAtStatements");
 
             migrationBuilder.DropTable(
                 name: "Users");

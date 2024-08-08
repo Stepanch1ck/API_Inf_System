@@ -12,7 +12,7 @@ namespace RegisterOfInformationSystems.Core.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public ICollection<AttributeStatement> AttributeStatements { get; set; } = [];
-        public ICollection<Attribute> Attributes { get; set; } = [];
+        public List<Attribute> Attributes = new List<Attribute>();
         public InformationSystem() { }
         public InformationSystem(string name, string description, List<Attribute> attributes, List<AttributeStatement> statements)
         {

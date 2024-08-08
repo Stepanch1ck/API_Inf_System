@@ -19,15 +19,27 @@ namespace InfSystemsAPI.Controllers
             return Ok();
         }
         [HttpGet("getsystems")]
-        public async Task<IActionResult> GetInfSystem([FromQuery] GetInfSystemRequests request)
+        public async Task<IActionResult> GetInfSystems([FromQuery] GetInfSystemRequests request)
         {
             var systems = _infSystemService.GetInformationSystemsByPartOfName(request.Search);
             if(systems != null)
             {
-                return Ok(systems.ToList());
+                return Ok(systems);
             }
             return Ok("No Information Systems");
         }
+
+        [HttpGet("getsystem")]
+        public async Task<IActionResult> GetInfSystem([FromQuery] GetInfSystemRequests request)
+        {
+            var system = _infSystemService.GetInformationSystemByFullName(request.Search);
+            if (system != null)
+            {
+                return Ok(system);
+            }
+            return Ok("No Information System With This Name");
+        }
+
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteInfSystem([FromBody] DeleteInfSystem request)
         {

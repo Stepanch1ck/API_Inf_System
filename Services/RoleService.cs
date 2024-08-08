@@ -27,7 +27,7 @@ namespace RegisterOfInformationSystems.Service
             return role;
             #endregion
         }
-        public async Task<List<Role>> GetAllRoles()
+        public List<Role> GetAllRoles()
         {
             #region Получить все роли
             return _dbContext.Roles.Include(r => r.Users).ToList();

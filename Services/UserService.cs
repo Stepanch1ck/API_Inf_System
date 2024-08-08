@@ -28,7 +28,7 @@ namespace Services
 
             #region Создать Пользователя
             await CreateUser(login, newPassword, user.Role.RolePower);
-            #endregion 
+            #endregion
 
             return true;
         }
@@ -43,8 +43,13 @@ namespace Services
             if (check != null) return false;
             #endregion
 
-            #region создать пользователя и закинуть его в бд
-            var tempUser = new User(login, password, _roleService.GetRolePowerOf(rolePower));
+            #region Проверка роли
+            var tempRole = _roleService.GetRolePowerOf(rolePower);
+            if (tempRole == null) return false;
+            #endregion
+
+            #region Создать пользователя и закинуть его в бд
+            var tempUser = new User(login, password, tempRole);
             await _dbContext.Users.AddAsync(tempUser);
             await _dbContext.SaveChangesAsync();
             #endregion
@@ -77,7 +82,7 @@ namespace Services
             #endregion
         }
 
-        public async Task<List<User>?> GetByRole(string name)
+        public List<User>? GetByRole(string name)
         {
             #region найти роль по названию и пользователей с этой ролью
             var role = _roleService.GetRoleByName(name);
@@ -93,7 +98,7 @@ namespace Services
             #endregion
         }
 
-        public async Task<bool> LogInPermission(string login, string password)
+        public bool LogInPermission(string login, string password)
         {
             #region Найти пользователя по логину
             var user = GetByLogin(login);
@@ -104,24 +109,24 @@ namespace Services
             #endregion
 
             #region Сравнение пароля
-            if (await GetSHA256(password) == user.Password) return true;
+            if (GetSHA256(password) == user.Password) return true;
             #endregion
 
             #region Вернуть запрет на авторизацию если неверный пароль 
             return false;
             #endregion
         }
-        private static async Task<string> GetSHA256(string password)
+        private static string GetSHA256(string password)
         {
             #region Создать и вернуть хеш пароля в SHA256
             var byteArray = SHA256.HashData(Encoding.UTF8.GetBytes(password));
             return Convert.ToHexString(byteArray);
             #endregion
         }
-        public async Task<List<Role>> GetAllRoles()
+        public List<Role> GetAllRoles()
         {
             #region Вернуть список всех ролей
-            return await _roleService.GetAllRoles();
+            return _roleService.GetAllRoles();
             #endregion
         }
     }

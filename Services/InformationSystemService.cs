@@ -1,4 +1,5 @@
-﻿using RegisterOfInformationSystems.Core.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using RegisterOfInformationSystems.Core.Interfaces;
 using RegisterOfInformationSystems.Core.Models;
 using RegisterOfInformationSystems.Database;
 using Services;
@@ -17,15 +18,22 @@ namespace RegisterOfInformationSystems.Service
             #endregion
 
             #region Создание временной ИС
-            var tempInfSystem = new InformationSystem();
+            var tempInfSystem = new InformationSystem
+            {
+                Name = name,
+                Description = description
+            };
             #endregion
 
             #region Заполнить ИС аттрибутами
             for (int i = 0;i<attributeNames.Count;i++)
             {
-                var tempAttr = _attributeService.GetAttributeByFullName(name);
+                var tempAttr = _attributeService.GetAttributeByFullName(attributeNames[i]);
+                if(tempAttr == null) continue;
                 tempInfSystem.Attributes.Add(tempAttr);
-                tempInfSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault());
+                var tempState = tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault();
+                if (tempState == null) continue;
+                tempInfSystem.AttributeStatements.Add(tempState);
             }
             #endregion
 
@@ -53,7 +61,7 @@ namespace RegisterOfInformationSystems.Service
             #endregion
         }
 
-        public List<InformationSystem> GetInformationSystemsByAttributeContain(string attribute)
+        public List<InformationSystem>? GetInformationSystemsByAttributeContain(string attribute)
         {
             #region найти аттрибут для поиска
             var tempattr = _attributeService.GetAttributeByFullName(attribute);
@@ -75,10 +83,10 @@ namespace RegisterOfInformationSystems.Service
             return null;
         }
 
-        public List<InformationSystem> GetInformationSystemsByPartOfName(string partOfName)
+        public List<InformationSystem>? GetInformationSystemsByPartOfName(string partOfName)
         {
             #region Найти все ИС по поисковому запросу
-            var infSystems = _dbContext.InfSystems.Where(sys => sys.Name.Contains(partOfName));
+            var infSystems = _dbContext.InfSystems.Include(iS => iS.Attributes).Include(iS => iS.AttributeStatements).Where(sys => sys.Name.Contains(partOfName));
             #endregion
 
             #region Вернуть null если нет таких ИС
@@ -120,10 +128,16 @@ namespace RegisterOfInformationSystems.Service
             #endregion
 
             #region Заменить значение аттрибута
-            infSystem.AttributeStatements.Remove(infSystem.AttributeStatements.Where(attr => attr.Attribute == tempattr).FirstOrDefault());
-            infSystem.AttributeStatements.Add(tempattr.States.Where(st => st.Value == state).FirstOrDefault());
-            await _dbContext.SaveChangesAsync();
-            return true;
+            var currentState = infSystem.AttributeStatements.Where(attr => attr.Attribute == tempattr).FirstOrDefault();
+            var newState = tempattr.States.Where(st => st.Value == state).FirstOrDefault();
+            if (currentState != null && newState != null)
+            {
+                infSystem.AttributeStatements.Remove(currentState);
+                infSystem.AttributeStatements.Add(newState);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
             #endregion
         }
 
@@ -140,8 +154,9 @@ namespace RegisterOfInformationSystems.Service
 
         public InformationSystem? GetInformationSystemByFullName(string fullName)
         {
+            if (fullName == null) return null;
             #region Найти ИС по названию
-            return _dbContext.InfSystems.Where(infSys => infSys.Name.Equals(fullName)).FirstOrDefault();
+            return _dbContext.InfSystems.Include(iS => iS.Attributes).Include(iS => iS.Attributes).Where(infSys => infSys.Name.Equals(fullName)).FirstOrDefault();
             #endregion
         }
     }

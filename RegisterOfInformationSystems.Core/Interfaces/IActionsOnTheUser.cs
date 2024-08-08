@@ -10,8 +10,8 @@ namespace RegisterOfInformationSystems.Core.Interfaces
     public interface IActionsOnTheUser
     {
         User? GetByLogin(string login);
-        Task<List<User>?> GetByRole(string role);
-        Task<bool> LogInPermission(string login, string password);
+        List<User>? GetByRole(string role);
+        bool LogInPermission(string login, string password);
         Task<bool> CreateUser(string login, string password, int rolePower);
         Task<bool> DeleteUser(string login);
         Task<bool> ChangePassword(string login, string newPassword);

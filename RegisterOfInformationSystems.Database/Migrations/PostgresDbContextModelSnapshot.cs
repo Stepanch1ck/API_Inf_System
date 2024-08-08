@@ -22,22 +22,7 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AttributeInformationSystem", b =>
-                {
-                    b.Property<Guid>("AttributesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("InformationSystemsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("AttributesId", "InformationSystemsId");
-
-                    b.HasIndex("InformationSystemsId");
-
-                    b.ToTable("AttributeInformationSystem");
-                });
-
-            modelBuilder.Entity("AttributeStatementInformationSystem", b =>
+            modelBuilder.Entity("IStoAtStatements", b =>
                 {
                     b.Property<Guid>("AttributeStatementsId")
                         .HasColumnType("uuid");
@@ -49,7 +34,22 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
                     b.HasIndex("InformationSystemsId");
 
-                    b.ToTable("AttributeStatementInformationSystem");
+                    b.ToTable("IStoAtStatements");
+                });
+
+            modelBuilder.Entity("IStoAtributes", b =>
+                {
+                    b.Property<Guid>("AttributesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InformationSystemsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AttributesId", "InformationSystemsId");
+
+                    b.HasIndex("InformationSystemsId");
+
+                    b.ToTable("IStoAtributes");
                 });
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.Attribute", b =>
@@ -117,9 +117,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.Role", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -135,13 +137,38 @@ namespace RegisterOfInformationSystems.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            Description = "Can do anything",
+                            Name = "admin",
+                            RolePower = 1
+                        },
+                        new
+                        {
+                            Id = -2,
+                            Description = "Can Edit Information Systems",
+                            Name = "Editor",
+                            RolePower = 2
+                        },
+                        new
+                        {
+                            Id = -3,
+                            Description = "Can Take Information",
+                            Name = "Reader",
+                            RolePower = 3
+                        });
                 });
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -151,8 +178,8 @@ namespace RegisterOfInformationSystems.Database.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -161,11 +188,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AttributeInformationSystem", b =>
+            modelBuilder.Entity("IStoAtStatements", b =>
                 {
-                    b.HasOne("RegisterOfInformationSystems.Core.Models.Attribute", null)
+                    b.HasOne("RegisterOfInformationSystems.Core.Models.AttributeStatement", null)
                         .WithMany()
-                        .HasForeignKey("AttributesId")
+                        .HasForeignKey("AttributeStatementsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -176,11 +203,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AttributeStatementInformationSystem", b =>
+            modelBuilder.Entity("IStoAtributes", b =>
                 {
-                    b.HasOne("RegisterOfInformationSystems.Core.Models.AttributeStatement", null)
+                    b.HasOne("RegisterOfInformationSystems.Core.Models.Attribute", null)
                         .WithMany()
-                        .HasForeignKey("AttributeStatementsId")
+                        .HasForeignKey("AttributesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -200,7 +227,7 @@ namespace RegisterOfInformationSystems.Database.Migrations
                         .IsRequired();
 
                     b.HasOne("RegisterOfInformationSystems.Core.Models.Attribute", null)
-                        .WithMany("states")
+                        .WithMany("AttributeStatements")
                         .HasForeignKey("AttributeId1");
 
                     b.Navigation("Attribute");
@@ -219,9 +246,9 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.Attribute", b =>
                 {
-                    b.Navigation("States");
+                    b.Navigation("AttributeStatements");
 
-                    b.Navigation("states");
+                    b.Navigation("States");
                 });
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.Role", b =>

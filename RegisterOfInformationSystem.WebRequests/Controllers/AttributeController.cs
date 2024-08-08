@@ -19,7 +19,7 @@ namespace InfSystemsAPI.Controllers
             return Ok("Attribute with this name already exists");
         }
         [HttpGet("getattributes")]
-        public async Task<IActionResult> GetAllAttributes()
+        public IActionResult GetAllAttributes()
         {
             var attrs = _attributeService.GetAttributesByPartOfName("");
             if (attrs == null)

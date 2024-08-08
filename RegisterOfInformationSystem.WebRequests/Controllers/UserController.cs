@@ -48,9 +48,9 @@ namespace InfSystemsAPI.Controllers
         [HttpGet("getuserbyrole")]
         public async Task<IActionResult> GetUsernamesByRole([FromQuery] GetUserByRole request)
         {
-            if ((await _userService.GetByRole(request.Role)) != null)
+            if ((_userService.GetByRole(request.Role)) != null)
             {
-                return Ok(await _userService.GetByRole(request.Role));
+                return Ok(_userService.GetByRole(request.Role));
             }
             return Ok("User does not exist");
         }
