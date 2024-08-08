@@ -8,8 +8,8 @@ namespace API_Inf_System.IServices
         Task<User> AuthenticateAsync(string username, string password);
         Task<List<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(int userid);
-        Task<User> CreateUserAsync(UserCreateDto userDto);
-        Task<bool> UpdateUserAsync(int userId, UserUpdateDto userDto); 
+        Task<User> CreateUserAsync(UserDto userDto);
+        Task<bool> UpdateUserAsync(int userId, UserDto userDto); 
         Task<bool> DeleteUserAsync(int userId);
     }
 }

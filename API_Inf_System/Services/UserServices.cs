@@ -43,7 +43,7 @@ namespace API_Inf_System.Services
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        public async Task<User> CreateUserAsync(UserCreateDto userDto)
+        public async Task<User> CreateUserAsync(UserDto userDto)
         {
             var newUser = new User
             {
@@ -76,7 +76,7 @@ namespace API_Inf_System.Services
             return true;
         }
 
-        public async Task<bool> UpdateUserAsync(int userId, UserUpdateDto userDto)
+        public async Task<bool> UpdateUserAsync(int userId, UserDto userDto)
         {
             var user = await _context.Users.FindAsync(userId);
 
@@ -86,6 +86,7 @@ namespace API_Inf_System.Services
             }
 
             user.Username = userDto.Username;
+            user.PasswordHash = HashPassword(userDto.Password);
             user.RoleId = userDto.RoleId;
 
             try

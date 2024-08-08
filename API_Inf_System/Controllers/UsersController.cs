@@ -50,7 +50,7 @@ namespace API_Inf_System.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<User>> CreateUser(UserCreateDto userDto)
+        public async Task<ActionResult<User>> CreateUser(UserDto userDto)
         {
             var newUser = await _userService.CreateUserAsync(userDto);
             return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
@@ -80,7 +80,7 @@ namespace API_Inf_System.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")] 
-        public async Task<IActionResult> UpdateUser(int id, UserUpdateDto userDto)
+        public async Task<IActionResult> UpdateUser(int id, UserDto userDto)
         {
             if (await _userService.UpdateUserAsync(id, userDto))
             {

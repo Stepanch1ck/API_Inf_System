@@ -341,18 +341,12 @@ namespace API_Inf_System.Services
             informationSystem.Name = informationSystemDto.Name;
             informationSystem.UpdatedAt = DateTime.Now;
 
+            _context.AttributeValues.RemoveRange(informationSystem.AttributeValues);
+
+            // Add the new/updated attribute values
             foreach (var attributeDto in informationSystemDto.Attributes)
             {
-                var existingAttributeValue = informationSystem.AttributeValues.FirstOrDefault(av => av.AttributeId == attributeDto.Id);
-                if (existingAttributeValue != null)
-                {
-                    existingAttributeValue.Value = attributeDto.Value;
-                }
-                else
-                {
-                    await _attributeValueService.CreateAttributeValueAsync(informationSystem.Id, attributeDto.Id, attributeDto.Value);
-                }
-                await _context.SaveChangesAsync();
+                await _attributeValueService.CreateAttributeValueAsync(informationSystem.Id, attributeDto.Id, attributeDto.Value);
             }
             try
             {
