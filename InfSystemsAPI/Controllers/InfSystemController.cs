@@ -14,7 +14,7 @@ namespace InfSystemsAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> AddNewInfSystem([FromBody]CreateInfSystem request)
         {
-            if(!_dbContext.InfSystems.Where(sys => sys.Name.ToLower() == request.Name.ToLower()).Any())
+            if(!_dbContext.InfSystems.Where(sys => sys.Name.Equals(request.Name)).Any())
             {
                 var tempDict = new Dictionary<string, string>();
                 for(int i=0; i<request.AttributeKeys.Length;i++)
@@ -34,14 +34,13 @@ namespace InfSystemsAPI.Controllers
             var InfSysQuery = _dbContext.InfSystems
                 .Where(sys => 
                 string.IsNullOrWhiteSpace(request.Search) 
-                || sys.Name.ToLower()
-                           .Contains(request.Search.ToLower()));
+                || sys.Name.Contains(request.Search));
             return Ok(await InfSysQuery?.ToListAsync());
         }
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteInfSystem([FromBody]DeleteInfSystem request)
         {
-            var system = _dbContext.InfSystems.Where(sys => sys.Name.ToLower() == request.Name.ToLower()).ToArray()[0];
+            var system = _dbContext.InfSystems.Where(sys => sys.Name.Equals(request.Name)).ToArray()[0];
             if (system != null)
             {
                 _dbContext.InfSystems.Remove(system);

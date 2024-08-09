@@ -11,13 +11,13 @@ namespace InfSystemsAPI.Controllers
     [Route("[controller]")] 
     public class LoginController(InfSystemAPIDbContext dbContext) : ControllerBase
     {
-        InfSystemAPIDbContext _dbContext = dbContext;
+        private readonly InfSystemAPIDbContext _dbContext = dbContext;
         [HttpGet("signin")]
         public async Task<IActionResult> IsUserValid([FromQuery]UserValidation request)
         {
-            if (_dbContext.Users?.Where(user => user.Login.ToLower() == request.Username.ToLower()).Count() != 0)
+            if (_dbContext.Users?.Where(user => user.Login.Equals(request.Username)).Count() != 0)
             {
-                if(request.Password.GetHashCode() == _dbContext.Users?.Where(user => user.Login.ToLower() == request.Username.ToLower()).ToArray()[0].Password)
+                if(request.Password.GetHashCode() == _dbContext.Users?.Where(user => user.Login.Equals(request.Username)).ToArray()[0].Password)
                 {
                     return Ok("true");
                 }

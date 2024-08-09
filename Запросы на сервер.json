@@ -7,178 +7,482 @@
 	},
 	"item": [
 		{
-			"name": "login user1",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "",
-						"value": "",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:5295/login/signin/?Username=User1&Password=12345678",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"login",
-						"signin",
-						""
-					],
-					"query": [
-						{
-							"key": "Username",
-							"value": "User1"
+			"name": "User Requests",
+			"item": [
+				{
+					"name": "login user1",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5295/login/signin/?Username=User1&Password=12345678",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"login",
+								"signin",
+								""
+							],
+							"query": [
+								{
+									"key": "Username",
+									"value": "User1"
+								},
+								{
+									"key": "Password",
+									"value": "12345678"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Username\": \"User1\",\r\n    \"Password\": \"12345678\",\r\n    \"Role\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "Password",
-							"value": "12345678"
+						"url": {
+							"raw": "http://localhost:5295/user/signup/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"user",
+								"signup",
+								""
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Username\": \"User1\",\r\n    \"Password\": \"12345678\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:5295/user/signup/",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"user",
-						"signup",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"Username\":\"User4\"}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Login\" : \"User1\",\r\n    \"Password\" : \"1234678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/user/changePassword",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"user",
+								"changePassword"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:5295/user/deleteuser",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"user",
-						"deleteuser"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get users",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5295/user/getusers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"user",
-						"getusers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "admin role creating",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"Name\":\"admin\",\"Description\":\"123\",\"Power\":\"15\"}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "get users with role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5295/user/getuserbyrole?Role=admin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"user",
+								"getuserbyrole"
+							],
+							"query": [
+								{
+									"key": "Role",
+									"value": "admin"
+								}
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:5295/role/create",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"role",
-						"create"
-					]
+				{
+					"name": "get users with login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5295/user/getuserbylogin?Username=user1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"user",
+								"getuserbylogin"
+							],
+							"query": [
+								{
+									"key": "Username",
+									"value": "user1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Username\":\"admin\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/user/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"user",
+								"delete"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "admin role deleting",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"Name\":\"admin\"}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "IS requests",
+			"item": [
+				{
+					"name": "create new inf system",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"IS registry\",\r\n    \"Description\" : \"Information about IS\",\r\n    \"AttributeKeys\": [\"purpose\",\"StartDate\",\"Developer\",\"LicenseInformation\",\"Functions\",\"DataBase\"],\r\n    \"AttributeValues\" : [\"Developing\",\"08.08.2024\",\"TatITNeft\",\"NoLicense\",\"HelpFunction\",\"PostgreSQL\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/infsystem/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"infsystem",
+								"create"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:5295/role/delete",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"role",
-						"delete"
-					]
+				{
+					"name": "get inf systems",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5295/infsystem/getsystems/?Search=is&SortItem",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"infsystem",
+								"getsystems",
+								""
+							],
+							"query": [
+								{
+									"key": "Search",
+									"value": "is"
+								},
+								{
+									"key": "SortItem",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change attributes",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"IS registry\",\r\n    \"AttrNames\" : [],\r\n    \"AttrValues\" : []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/InfSystem/change",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"InfSystem",
+								"change"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete inf system",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"IS registry\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/infsystem/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"infsystem",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get IS with attribute",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5295/infsystem/getiswithattribute?Name=DataBase",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"infsystem",
+								"getiswithattribute"
+							],
+							"query": [
+								{
+									"key": "Name",
+									"value": "DataBase"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Attribute Requests",
+			"item": [
+				{
+					"name": "create attribute",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"DataBase\",\r\n    \"Description\" : \"Which DataBase used\",\r\n    \"States\" : [\"PostgreSQL\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/attribute/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"attribute",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add State To Attribute",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"purpose\",\r\n    \"Value\" : \"aboba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/attribute/addstate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"attribute",
+								"addstate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove State",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"DataBase\",\r\n    \"Value\" : \"MySQL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/attribute/Removestate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"attribute",
+								"Removestate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get attributes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5295/attribute/getattributes?Search=  ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"attribute",
+								"getattributes"
+							],
+							"query": [
+								{
+									"key": "Search",
+									"value": "  "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete attribute",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"aboba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5295/attribute/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5295",
+							"path": [
+								"attribute",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "get all roles",
@@ -186,191 +490,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5295/role/get",
+					"raw": "http://localhost:5295/user/getroles",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5295",
 					"path": [
-						"role",
-						"get"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get inf systems",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5295/infsystem/getsystems/?Search&SortItem",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"infsystem",
-						"getsystems",
-						""
-					],
-					"query": [
-						{
-							"key": "Search",
-							"value": null
-						},
-						{
-							"key": "SortItem",
-							"value": null
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create new inf system",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Name\" : \"aboba\",\r\n    \"Description\" : \"\",\r\n    \"AttributeKeys\": [\"Key1\",\"Key2\"],\r\n    \"AttributeValues\" : [\"value1\",\"value2\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5295/infsystem/create",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"infsystem",
-						"create"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete inf system",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Name\" : \"aboba\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5295/infsystem/delete",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"infsystem",
-						"delete"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create attribute",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Name\" : \"aboba\",\r\n    \"Description\" : \"123\",\r\n    \"States\" : [\"1\",\"2\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5295/attribute/create",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"attribute",
-						"create"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get attributes",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5295/attribute/getattributes?Search=  ",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"attribute",
-						"getattributes"
-					],
-					"query": [
-						{
-							"key": "Search",
-							"value": "  "
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete attribute",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Name\" : \"aboba\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5295/attribute/delete",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5295",
-					"path": [
-						"attribute",
-						"delete"
+						"user",
+						"getroles"
 					]
 				}
 			},
