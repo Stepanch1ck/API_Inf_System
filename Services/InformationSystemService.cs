@@ -128,7 +128,7 @@ namespace RegisterOfInformationSystems.Service
             #endregion
 
             #region Заменить значение аттрибута
-            var currentState = infSystem.AttributeStatements.Where(attr => attr.Attribute == tempattr).FirstOrDefault();
+            var currentState = infSystem.AttributeStatements.Where(attr => attr.attribute == tempattr).FirstOrDefault();
             var newState = tempattr.States.Where(st => st.Value == state).FirstOrDefault();
             if (currentState != null && newState != null)
             {

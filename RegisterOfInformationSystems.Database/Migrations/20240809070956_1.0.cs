@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -18,7 +17,8 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 name: "Attributes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false)
                 },
@@ -31,7 +31,8 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 name: "InfSystems",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false)
                 },
@@ -59,10 +60,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 name: "AttributeStatements",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Value = table.Column<string>(type: "text", nullable: false),
-                    AttributeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AttributeId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    AttributeId = table.Column<int>(type: "integer", nullable: false),
+                    AttributeId1 = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -84,8 +86,8 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 name: "IStoAtributes",
                 columns: table => new
                 {
-                    AttributesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InformationSystemsId = table.Column<Guid>(type: "uuid", nullable: false)
+                    AttributesId = table.Column<int>(type: "integer", nullable: false),
+                    InformationSystemsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -129,8 +131,8 @@ namespace RegisterOfInformationSystems.Database.Migrations
                 name: "IStoAtStatements",
                 columns: table => new
                 {
-                    AttributeStatementsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InformationSystemsId = table.Column<Guid>(type: "uuid", nullable: false)
+                    AttributeStatementsId = table.Column<int>(type: "integer", nullable: false),
+                    InformationSystemsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,6 +149,41 @@ namespace RegisterOfInformationSystems.Database.Migrations
                         principalTable: "InfSystems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Attributes",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { -28, "Прочие информационные ссылки по ИС", "OtherIPInformationLinks" },
+                    { -27, "Список интегрируемых ИС, направление и описание передаваемых данных", "ListOfIntegratedISAndDescriptionOfTransmittedData" },
+                    { -26, "Описание внешнего (интеграционного) API ИС (при наличии)", "DescriptonOfExternalAPIs" },
+                    { -25, "Наличие исходных кодов ИС в корпоративном репозитории", "SourceCodeInCorporateREpositoryAvailability" },
+                    { -24, "Список компонентов ИС с указанием стека (средств разработки)", "ListOfISComponentsWithStack" },
+                    { -23, "Наличие руководства администратора ИС", "AdminManualAvailability" },
+                    { -22, "Наличие руководства пользователя ИС", "UserManualAvailability" },
+                    { -21, "Список серверов и их функциональные роли", "ListOfServersAndRoles" },
+                    { -20, "Архитектура ИС", "ISArchitecture" },
+                    { -19, "Срок хранения информации", "InformationStoragePeriod" },
+                    { -18, "Периодичность обновления информации", "InformationUpdateFrequency" },
+                    { -17, "Способы авторизации пользователей", "UserAuthorizationMethods" },
+                    { -16, "Наличие ролевого доступа", "RoleAccessAvailability" },
+                    { -15, "Количество рабочих мест", "NumberOfJobs" },
+                    { -14, "Дополнительное прикладное ПО", "AdditionalSoftware" },
+                    { -13, "СУБД", "DataBase" },
+                    { -12, "Клиентские ОС", "CLientOS" },
+                    { -11, "Серверная ОС", "ServerOS" },
+                    { -10, "Дата внесения изменений в сведения о ИС", "InformationEditDate" },
+                    { -9, "Контакты ответственного должностного лица", "ResponsiblePersonContacts" },
+                    { -8, "Ответственное за работу ИС структурноое подразделение", "ResponsibleDepartment" },
+                    { -7, "Основные Функции", "BaseFunctions" },
+                    { -6, "Область применения(бизнес-процессы)", "UsingSphere" },
+                    { -5, "Бизнес-Планирование", "Business-Planning" },
+                    { -4, "Информация по лицензиям", "LicenseInformation" },
+                    { -3, "Разработчик", "Developer" },
+                    { -2, "Дата ввода в эксплуатацию", "WhenStartedUsing" },
+                    { -1, "Назначение", "Purpose" }
                 });
 
             migrationBuilder.InsertData(

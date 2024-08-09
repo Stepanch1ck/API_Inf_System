@@ -8,10 +8,10 @@ namespace RegisterOfInformationSystems.Core.Models
 {
     public class AttributeStatement
     {
-        public Guid Id { get; set; }
-        public Attribute Attribute { get; set; }
+        public int Id { get; set; }
+        public Attribute attribute { get; set; }
         public string Value { get; set; }
-        public Guid AttributeId { get; set; }
+        public int AttributeId { get; set; }
         public ICollection<InformationSystem> InformationSystems { get; set; }= new List<InformationSystem>();
         public AttributeStatement()
         {
@@ -19,7 +19,7 @@ namespace RegisterOfInformationSystems.Core.Models
         }
         public AttributeStatement(Attribute attribute, string value)
         {
-            this.Attribute = attribute;
+            this.attribute = attribute;
             this.Value = value;
         }
     }

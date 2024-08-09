@@ -8,7 +8,7 @@ namespace RegisterOfInformationSystems.Core.Models
 {
     public class Attribute
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public ICollection<AttributeStatement> AttributeStatements { get; set; }

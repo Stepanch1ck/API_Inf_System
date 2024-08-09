@@ -24,11 +24,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
             modelBuilder.Entity("IStoAtStatements", b =>
                 {
-                    b.Property<Guid>("AttributeStatementsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("AttributeStatementsId")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("InformationSystemsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("InformationSystemsId")
+                        .HasColumnType("integer");
 
                     b.HasKey("AttributeStatementsId", "InformationSystemsId");
 
@@ -39,11 +39,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
             modelBuilder.Entity("IStoAtributes", b =>
                 {
-                    b.Property<Guid>("AttributesId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("AttributesId")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("InformationSystemsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("InformationSystemsId")
+                        .HasColumnType("integer");
 
                     b.HasKey("AttributesId", "InformationSystemsId");
 
@@ -54,9 +54,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.Attribute", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -69,19 +71,191 @@ namespace RegisterOfInformationSystems.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Attributes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            Description = "Назначение",
+                            Name = "Purpose"
+                        },
+                        new
+                        {
+                            Id = -2,
+                            Description = "Дата ввода в эксплуатацию",
+                            Name = "WhenStartedUsing"
+                        },
+                        new
+                        {
+                            Id = -3,
+                            Description = "Разработчик",
+                            Name = "Developer"
+                        },
+                        new
+                        {
+                            Id = -4,
+                            Description = "Информация по лицензиям",
+                            Name = "LicenseInformation"
+                        },
+                        new
+                        {
+                            Id = -5,
+                            Description = "Бизнес-Планирование",
+                            Name = "Business-Planning"
+                        },
+                        new
+                        {
+                            Id = -6,
+                            Description = "Область применения(бизнес-процессы)",
+                            Name = "UsingSphere"
+                        },
+                        new
+                        {
+                            Id = -7,
+                            Description = "Основные Функции",
+                            Name = "BaseFunctions"
+                        },
+                        new
+                        {
+                            Id = -8,
+                            Description = "Ответственное за работу ИС структурноое подразделение",
+                            Name = "ResponsibleDepartment"
+                        },
+                        new
+                        {
+                            Id = -9,
+                            Description = "Контакты ответственного должностного лица",
+                            Name = "ResponsiblePersonContacts"
+                        },
+                        new
+                        {
+                            Id = -10,
+                            Description = "Дата внесения изменений в сведения о ИС",
+                            Name = "InformationEditDate"
+                        },
+                        new
+                        {
+                            Id = -11,
+                            Description = "Серверная ОС",
+                            Name = "ServerOS"
+                        },
+                        new
+                        {
+                            Id = -12,
+                            Description = "Клиентские ОС",
+                            Name = "CLientOS"
+                        },
+                        new
+                        {
+                            Id = -13,
+                            Description = "СУБД",
+                            Name = "DataBase"
+                        },
+                        new
+                        {
+                            Id = -14,
+                            Description = "Дополнительное прикладное ПО",
+                            Name = "AdditionalSoftware"
+                        },
+                        new
+                        {
+                            Id = -15,
+                            Description = "Количество рабочих мест",
+                            Name = "NumberOfJobs"
+                        },
+                        new
+                        {
+                            Id = -16,
+                            Description = "Наличие ролевого доступа",
+                            Name = "RoleAccessAvailability"
+                        },
+                        new
+                        {
+                            Id = -17,
+                            Description = "Способы авторизации пользователей",
+                            Name = "UserAuthorizationMethods"
+                        },
+                        new
+                        {
+                            Id = -18,
+                            Description = "Периодичность обновления информации",
+                            Name = "InformationUpdateFrequency"
+                        },
+                        new
+                        {
+                            Id = -19,
+                            Description = "Срок хранения информации",
+                            Name = "InformationStoragePeriod"
+                        },
+                        new
+                        {
+                            Id = -20,
+                            Description = "Архитектура ИС",
+                            Name = "ISArchitecture"
+                        },
+                        new
+                        {
+                            Id = -21,
+                            Description = "Список серверов и их функциональные роли",
+                            Name = "ListOfServersAndRoles"
+                        },
+                        new
+                        {
+                            Id = -22,
+                            Description = "Наличие руководства пользователя ИС",
+                            Name = "UserManualAvailability"
+                        },
+                        new
+                        {
+                            Id = -23,
+                            Description = "Наличие руководства администратора ИС",
+                            Name = "AdminManualAvailability"
+                        },
+                        new
+                        {
+                            Id = -24,
+                            Description = "Список компонентов ИС с указанием стека (средств разработки)",
+                            Name = "ListOfISComponentsWithStack"
+                        },
+                        new
+                        {
+                            Id = -25,
+                            Description = "Наличие исходных кодов ИС в корпоративном репозитории",
+                            Name = "SourceCodeInCorporateREpositoryAvailability"
+                        },
+                        new
+                        {
+                            Id = -26,
+                            Description = "Описание внешнего (интеграционного) API ИС (при наличии)",
+                            Name = "DescriptonOfExternalAPIs"
+                        },
+                        new
+                        {
+                            Id = -27,
+                            Description = "Список интегрируемых ИС, направление и описание передаваемых данных",
+                            Name = "ListOfIntegratedISAndDescriptionOfTransmittedData"
+                        },
+                        new
+                        {
+                            Id = -28,
+                            Description = "Прочие информационные ссылки по ИС",
+                            Name = "OtherIPInformationLinks"
+                        });
                 });
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.AttributeStatement", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("AttributeId")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("AttributeId1")
-                        .HasColumnType("uuid");
+                    b.Property<int>("AttributeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("AttributeId1")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -98,9 +272,11 @@ namespace RegisterOfInformationSystems.Database.Migrations
 
             modelBuilder.Entity("RegisterOfInformationSystems.Core.Models.InformationSystem", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
