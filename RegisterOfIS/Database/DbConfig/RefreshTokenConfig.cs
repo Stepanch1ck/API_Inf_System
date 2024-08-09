@@ -9,6 +9,10 @@ namespace RegisterOfIS.Database.DbConfig
         public void Configure(EntityTypeBuilder<RefreshToken> e)
         {
             e.ToTable("refresh_tokens");
+
+            e.HasKey(e => e.Token).HasName("refresh_token_pkey");
+
+            e.Property(e => e.Token).HasColumnName("token");
         }
     }
 }

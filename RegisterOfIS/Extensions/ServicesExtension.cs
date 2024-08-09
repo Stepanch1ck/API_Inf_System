@@ -3,8 +3,6 @@ using RegisterOfIS.Interfaces;
 using RegisterOfIS.Database;
 using Microsoft.OpenApi.Models;
 using RegisterOfIS.Web.Security;
-using Microsoft.Extensions.Configuration;
-using static RegisterOfIS.Web.Security.JwtAuthService;
 
 namespace RegisterOfIS.Extensions
 {

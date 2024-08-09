@@ -8,11 +8,11 @@ namespace RegisterOfIS.Models
 {
     public class AttributeStatement
     {
-        public Guid Id { get; set; }
-        public Guid AttributeId { get; set; }
+        public int Id { get; set; }
+        public int AttributeId { get; set; }
         public Attribute Attribute { get; set; }
         public string Value { get; set; }
-        public Guid InfSystemId { get; set; }
+        public int InfSystemId { get; set; }
         public InfSystem InfSystem { get; set; }
         public AttributeStatement()
         {

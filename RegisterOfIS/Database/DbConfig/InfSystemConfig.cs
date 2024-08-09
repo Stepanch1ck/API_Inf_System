@@ -16,8 +16,8 @@ namespace RegisterOfIS.Database.DbConfig
                 .HasForeignKey(st => st.InfSystemId);
 
             e.HasData(
-                new InfSystem { Id = Guid.NewGuid(), Name = "IS1", Description = "Desc1"},
-                new InfSystem { Id = Guid.NewGuid(), Name = "IS2", Description = "Desc2" }
+                new InfSystem { Id = -1, Name = "IS1", Description = "Desc1"},
+                new InfSystem { Id = -2, Name = "IS2", Description = "Desc2" }
                 );
         }
     }

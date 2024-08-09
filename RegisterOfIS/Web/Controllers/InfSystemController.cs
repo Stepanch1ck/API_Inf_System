@@ -39,11 +39,23 @@ namespace RegisterOfIS.Controllers
             }
             return Ok("Information System does not exist");
         }
+
         [HttpPut("change")]
         public async Task<IActionResult> SetNewAttributes([FromBody]ChangeAttributes request)
         {
             _infSystemService.UpdateInformationSystem(request.Name, request.AttrNames, request.AttrValues);
             return Ok(true);
+        }
+
+        [HttpGet("GetISWithAttribute")]
+        public async Task<IActionResult> GetISByAttributes([FromQuery] GetInfSystemWithAttribute request)
+        {
+            var systems = _infSystemService.GetInformationSystemsByAttributeContain(request.AttrName);
+            if (systems == null)
+            {
+                return Ok("No IS with this attribute");
+            }
+            return Ok(systems);
         }
     }
 }

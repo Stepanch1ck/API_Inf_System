@@ -8,9 +8,9 @@ namespace RegisterOfIS.Database.DbConfig
     {
         public void Configure(EntityTypeBuilder<Role> e)
         {
-            e.HasKey(e => e.Name).HasName("role_pkey");
-
             e.ToTable("roles");
+
+            e.HasKey(e => e.Name).HasName("role_pkey");
 
             e.Property(e => e.Name)
                 .HasColumnName("name");

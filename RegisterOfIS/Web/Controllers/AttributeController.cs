@@ -38,5 +38,26 @@ namespace RegisterOfIS.Controllers
             }
             return Ok("Attribute with this name does not exist");
         }
+
+
+        [HttpPut("addState")]
+        public async Task<IActionResult> AddNewState([FromBody] AddNewStateRequest request)
+        {
+            if (await _attributeService.AddNewState(request.Name, request.Value))
+            {
+                return Ok("Added");
+            }
+            return Ok("Something went wrong");
+        }
+
+        [HttpPut("removeState")]
+        public async Task<IActionResult> RemoveState([FromBody] RemoveStateRequest request)
+        {
+            if (await _attributeService.RemoveState(request.Name, request.Value))
+            {
+                return Ok("Removed");
+            }
+            return Ok("Something went Wrong");
+        }
     }
 }

@@ -3,7 +3,7 @@ namespace RegisterOfIS.Models
 {
     public class Attribute
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public ICollection<AttributeStatement> States { get; set; } = [];

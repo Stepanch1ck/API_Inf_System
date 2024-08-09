@@ -62,7 +62,7 @@ namespace RegisterOfIS.Controllers
         {
             return Ok(_roleService.GetAllRoles());
         }
-        [HttpPost("changePassword")]
+        [HttpPut("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePawword request)
         {
             if (await _userService.ChangePassword(request.Login, request.Password))

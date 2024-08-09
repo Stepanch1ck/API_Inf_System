@@ -5,7 +5,7 @@ namespace RegisterOfIS.Models
 {
     public class User
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string Login { get; set; }
 
