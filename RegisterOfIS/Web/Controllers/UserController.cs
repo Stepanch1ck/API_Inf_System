@@ -17,11 +17,6 @@ namespace RegisterOfIS.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistration request)
         {
-            HttpContext context = this.Accessor.HttpContext;
-            if (context.Request.Cookies["role"] != "admin" )
-            {
-                return Ok(false);
-            }
             if (await _userService.CreateUser(request.Username, request.Password, request.Role))
             {
                 return Ok(true);
