@@ -9,6 +9,7 @@ namespace InfSystemsAPI.Controllers
     public class AttributeController(AttributeService service) : ControllerBase
     {
         private readonly AttributeService _attributeService = service;
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateNewAttribute([FromBody] CreateAttributeRequest request)
         {
@@ -18,7 +19,8 @@ namespace InfSystemsAPI.Controllers
             }
             return Ok("Attribute with this name already exists");
         }
-        [HttpGet("getattributes")]
+
+        [HttpGet("getAttributes")]
         public IActionResult GetAllAttributes()
         {
             var attrs = _attributeService.GetAttributesByPartOfName("");
@@ -28,6 +30,7 @@ namespace InfSystemsAPI.Controllers
             }
             return Ok(attrs);
         }
+
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteAttribute([FromBody] DeleteAttribute request)
         {
@@ -36,6 +39,26 @@ namespace InfSystemsAPI.Controllers
                 return Ok("Deleted");
             }
             return Ok("Attribute with this name does not exist");
+        }
+
+        [HttpPut("addState")]
+        public async Task<IActionResult> AddNewState([FromBody] AddNewStateRequest request)
+        {
+            if(await _attributeService.AddNewState(request.Name, request.Value))
+            {
+                return Ok("Added");
+            }
+            return Ok("Something went wrong");
+        }
+
+        [HttpPut("removeState")]
+        public async Task<IActionResult> RemoveState([FromBody] RemoveStateRequest request)
+        {
+            if(await _attributeService.RemoveState(request.Name, request.Value))
+            {
+                return Ok("Removed");
+            }
+            return Ok("Something went Wrong");
         }
     }
 }

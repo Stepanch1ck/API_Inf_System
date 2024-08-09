@@ -69,7 +69,7 @@ namespace RegisterOfInformationSystems.Service
             if (tempattr != null)
             {
                 #region найти ИС с этим аттрибутом
-                var infSystems = _dbContext.InfSystems.Where(sys => sys.Attributes.Contains(tempattr));
+                var infSystems = _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes).Where(sys => sys.Attributes.Contains(tempattr));
                 #endregion
 
                 #region Вернуть null если таких нет

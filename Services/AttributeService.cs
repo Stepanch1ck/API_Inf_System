@@ -128,7 +128,8 @@ namespace Services
             #endregion
 
             #region Вернуть false если нет такого значения
-            else if (attribute.States.Select(st => st.Value).Contains(state)) return false;
+            Console.WriteLine(string.Join(" ", attribute.States.Select(st => st.Value)));
+            if (!attribute.States.Select(st => st.Value).Contains(state)) return false;
             #endregion
 
             #region Найти Значение у аттрибута

@@ -59,7 +59,7 @@ namespace InfSystemsAPI.Controllers
         {
             return Ok(_userService.GetAllRoles());
         }
-        [HttpPost("changePassword")]
+        [HttpPut("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePawword request)
         {
             if (await _userService.ChangePassword(request.Login, request.Password))

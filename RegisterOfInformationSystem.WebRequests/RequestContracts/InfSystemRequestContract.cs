@@ -10,4 +10,5 @@ namespace RegisterOfInformationSystem.WebRequests.RequestContracts
     public record CreateInfSystem(string Name, string Description, List<string> AttributeKeys, List<string> AttributeValues);
     public record DeleteInfSystem(string Name);
     public record ChangeAttributes(string Name, List<string> AttrNames, List<string> AttrValues);
+    public record GetInfSystemWithAttribute(string AttrName);
 }
