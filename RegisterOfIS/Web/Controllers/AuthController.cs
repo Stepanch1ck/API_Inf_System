@@ -35,7 +35,7 @@ namespace RegisterOfIS.Web.Controllers
 
             _logger.LogInformation($"User [{request.UserName}] logged in the system.");
 
-            return Ok(new LoginResponse(result.User.Login, result.AccessToken, result.RefreshToken));
+            return Ok(new LoginResponse(result.User.Login, result.User.Role.Name, result.AccessToken, result.RefreshToken));
         }
 
 
@@ -48,7 +48,7 @@ namespace RegisterOfIS.Web.Controllers
 
             if (!result.Success) return Unauthorized();
 
-            return Ok(new LoginResponse(result.User.Login, result.AccessToken, result.RefreshToken));
+            return Ok(new LoginResponse(result.User.Login, result.User.Role.Name, result.AccessToken, result.RefreshToken));
         }
 
     }
