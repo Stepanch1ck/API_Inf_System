@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RegisterOfIS.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class _10 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -102,8 +102,7 @@ namespace RegisterOfIS.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     AttributeId = table.Column<int>(type: "integer", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: false),
-                    InfSystemId = table.Column<int>(type: "integer", nullable: false)
+                    Value = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,9 +113,27 @@ namespace RegisterOfIS.Migrations
                         principalTable: "attributes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttributeStatementInfSystem",
+                columns: table => new
+                {
+                    AttributeStatementsId = table.Column<int>(type: "integer", nullable: false),
+                    InfSystemsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttributeStatementInfSystem", x => new { x.AttributeStatementsId, x.InfSystemsId });
                     table.ForeignKey(
-                        name: "FK_attribute_statements_inf_systems_InfSystemId",
-                        column: x => x.InfSystemId,
+                        name: "FK_AttributeStatementInfSystem_attribute_statements_AttributeS~",
+                        column: x => x.AttributeStatementsId,
+                        principalTable: "attribute_statements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AttributeStatementInfSystem_inf_systems_InfSystemsId",
+                        column: x => x.InfSystemsId,
                         principalTable: "inf_systems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -191,14 +208,14 @@ namespace RegisterOfIS.Migrations
                 column: "AttributeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_attribute_statements_InfSystemId",
-                table: "attribute_statements",
-                column: "InfSystemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_attributes_InfSystemId",
                 table: "attributes",
                 column: "InfSystemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttributeStatementInfSystem_InfSystemsId",
+                table: "AttributeStatementInfSystem",
+                column: "InfSystemsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_users_RoleName",
@@ -210,7 +227,7 @@ namespace RegisterOfIS.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "attribute_statements");
+                name: "AttributeStatementInfSystem");
 
             migrationBuilder.DropTable(
                 name: "refresh_tokens");
@@ -219,10 +236,13 @@ namespace RegisterOfIS.Migrations
                 name: "users");
 
             migrationBuilder.DropTable(
-                name: "attributes");
+                name: "attribute_statements");
 
             migrationBuilder.DropTable(
                 name: "roles");
+
+            migrationBuilder.DropTable(
+                name: "attributes");
 
             migrationBuilder.DropTable(
                 name: "inf_systems");

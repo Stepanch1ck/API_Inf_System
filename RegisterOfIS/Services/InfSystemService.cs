@@ -19,13 +19,19 @@ namespace RegisterOfIS.Services
 
             #region Создание временной ИС
             var tempInfSystem = new InfSystem();
+            tempInfSystem.Name = name;
+            tempInfSystem.Description = description;
             #endregion
 
             #region Заполнить ИС аттрибутами
             for (int i = 0;i<attributeNames.Count;i++)
             {
-                var tempAttr = _attributeService.GetAttributeByFullName(name);
+                var tempAttr = _attributeService.GetAttributeByFullName(attributeNames[i]);
                 tempInfSystem.Attributes.Add(tempAttr);
+                if(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault() == null)
+                {
+                    _attributeService.AddNewState(attributeNames[i], attributeValues[i]);
+                }
                 tempInfSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault());
             }
             #endregion
@@ -79,7 +85,7 @@ namespace RegisterOfIS.Services
         public List<InfSystem> GetInformationSystemsByPartOfName(string partOfName)
         {
             #region Найти все ИС по поисковому запросу
-            var infSystems = _dbContext.InfSystems.Where(sys => sys.Name.Contains(partOfName));
+            var infSystems = _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Where(sys => sys.Name.Contains(partOfName));
             #endregion
 
             #region Вернуть null если нет таких ИС

@@ -90,7 +90,7 @@ namespace RegisterOfIS.Services
         public List<Attribute>? GetAttributesByPartOfName(string partOfName)
         {
             #region Вытащить аттрибуты с БД
-            var attributes = _dbContext.Attributes.Where(attribute => attribute.Name.Contains(partOfName));
+            var attributes = _dbContext.Attributes.Include(attr => attr.States).Where(attribute => attribute.Name.Contains(partOfName));
             #endregion
 
             #region Вернуть null если аттрибутов нет
@@ -128,7 +128,7 @@ namespace RegisterOfIS.Services
             #endregion
 
             #region Вернуть false если нет такого значения
-            else if (attribute.States.Select(st => st.Value).Contains(state)) return false;
+            else if (!attribute.States.Select(st => st.Value).Contains(state)) return false;
             #endregion
 
             #region Найти Значение у аттрибута

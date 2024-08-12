@@ -22,6 +22,21 @@ namespace RegisterOfIS.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AttributeStatementInfSystem", b =>
+                {
+                    b.Property<int>("AttributeStatementsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("InfSystemsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AttributeStatementsId", "InfSystemsId");
+
+                    b.HasIndex("InfSystemsId");
+
+                    b.ToTable("AttributeStatementInfSystem");
+                });
+
             modelBuilder.Entity("RegisterOfIS.Models.Attribute", b =>
                 {
                     b.Property<int>("Id")
@@ -229,9 +244,6 @@ namespace RegisterOfIS.Migrations
                     b.Property<int>("AttributeId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("InfSystemId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("text");
@@ -239,8 +251,6 @@ namespace RegisterOfIS.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AttributeId");
-
-                    b.HasIndex("InfSystemId");
 
                     b.ToTable("attribute_statements", (string)null);
                 });
@@ -379,6 +389,21 @@ namespace RegisterOfIS.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AttributeStatementInfSystem", b =>
+                {
+                    b.HasOne("RegisterOfIS.Models.AttributeStatement", null)
+                        .WithMany()
+                        .HasForeignKey("AttributeStatementsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RegisterOfIS.Models.InfSystem", null)
+                        .WithMany()
+                        .HasForeignKey("InfSystemsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RegisterOfIS.Models.Attribute", b =>
                 {
                     b.HasOne("RegisterOfIS.Models.InfSystem", null)
@@ -394,15 +419,7 @@ namespace RegisterOfIS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RegisterOfIS.Models.InfSystem", "InfSystem")
-                        .WithMany("AttributeStatements")
-                        .HasForeignKey("InfSystemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Attribute");
-
-                    b.Navigation("InfSystem");
                 });
 
             modelBuilder.Entity("RegisterOfIS.Models.User", b =>
@@ -424,8 +441,6 @@ namespace RegisterOfIS.Migrations
 
             modelBuilder.Entity("RegisterOfIS.Models.InfSystem", b =>
                 {
-                    b.Navigation("AttributeStatements");
-
                     b.Navigation("Attributes");
                 });
 

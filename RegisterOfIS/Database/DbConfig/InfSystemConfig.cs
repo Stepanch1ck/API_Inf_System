@@ -12,8 +12,8 @@ namespace RegisterOfIS.Database.DbConfig
             e.ToTable("inf_systems");
 
             e.HasMany(inf => inf.AttributeStatements)
-                .WithOne(st => st.InfSystem)
-                .HasForeignKey(st => st.InfSystemId);
+                .WithMany(st => st.InfSystems)
+                .UsingEntity(e => { });
 
             e.HasData(
                 new InfSystem { Id = -1, Name = "IS1", Description = "Desc1"},

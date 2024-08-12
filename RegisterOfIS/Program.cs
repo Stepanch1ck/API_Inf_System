@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using RegisterOfIS.Database;
 using RegisterOfIS.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,10 @@ builder.Services
 
 var app = builder.Build();
 
+using var scope = app.Services.CreateScope();
+using var dbContext = scope.ServiceProvider.GetService<PostgresDbContext>();
+
+dbContext.Database.Migrate();
 app.ConfigureWeb();
 
 app.Run();
