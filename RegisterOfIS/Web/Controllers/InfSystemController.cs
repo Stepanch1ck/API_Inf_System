@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RegisterOfIS.Controllers
 {
-    [Authorize(Policy = "Reader")]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class InfSystemController(IInfSystemService infSystemService) : ControllerBase

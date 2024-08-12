@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RegisterOfIS.Controllers
 {
-    [Authorize(Policy = "Admin")]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController(IUserService userService, IRoleService roleService, IHttpContextAccessor accessor) : ControllerBase
