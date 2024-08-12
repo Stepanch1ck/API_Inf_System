@@ -84,12 +84,12 @@ namespace RegisterOfIS.Services
 
         public List<InfSystem> GetInformationSystemsByPartOfName(string partOfName)
         {
-            #region Найти все ИС по поисковому запросу
-            var infSystems = _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Where(sys => sys.Name.Contains(partOfName));
+            #region Вернуть все если нет фильтра
+            if (partOfName == null) return [.. _dbContext.InfSystems.Include(iS => iS.AttributeStatements)];
             #endregion
 
-            #region Вернуть null если нет таких ИС
-            if (infSystems.FirstOrDefault() == null) return null;
+            #region Найти все ИС по поисковому запросу
+            var infSystems = _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Where(sys => sys.Name.Contains(partOfName));
             #endregion
 
             #region Вернуть список ИС

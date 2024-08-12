@@ -16,7 +16,6 @@ var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
 using var dbContext = scope.ServiceProvider.GetService<PostgresDbContext>();
-
 dbContext.Database.Migrate();
 app.ConfigureWeb();
 
