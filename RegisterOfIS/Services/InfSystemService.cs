@@ -85,7 +85,7 @@ namespace RegisterOfIS.Services
         public List<InfSystem> GetInformationSystemsByPartOfName(string partOfName)
         {
             #region Вернуть все если нет фильтра
-            if (partOfName == null) return [.. _dbContext.InfSystems.Include(iS => iS.AttributeStatements)];
+            if (partOfName == null) return [.. _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes)];
             #endregion
 
             #region Найти все ИС по поисковому запросу
