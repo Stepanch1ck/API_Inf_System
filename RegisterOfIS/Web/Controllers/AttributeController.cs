@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RegisterOfIS.Requests;
 using RegisterOfIS.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RegisterOfIS.Controllers
 {
 
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class AttributeController(IAttributeService service) : ControllerBase
