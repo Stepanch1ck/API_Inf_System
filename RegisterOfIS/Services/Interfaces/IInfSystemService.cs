@@ -12,9 +12,9 @@ namespace RegisterOfIS.Interfaces
         Task<bool> CreateInformationSystem(string name, string description, List<string> keys, List<string> values);
         Task<bool> DeleteInformationSystem(string name);
         Task<bool> UpdateInformationSystem(string name, List<string> keys, List<string> values);
-        List<InfSystem> GetInformationSystemsByPartOfName(string partOfName);
-        InfSystem? GetInformationSystemByFullName(string fullName);
-        List<InfSystem> GetInformationSystemsByAttributeContain(string attribute);
+        Task<List<InfSystem>> GetInformationSystemsByPartOfName(string partOfName);
+        Task<InfSystem?> GetInformationSystemByFullName(string fullName);
+        Task<List<InfSystem>> GetInformationSystemsByAttributeContain(string attribute);
         Task<bool> SetAttributeToInformationalSystem(string name, string attribute, string state);
 
     }

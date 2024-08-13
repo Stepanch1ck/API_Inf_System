@@ -14,7 +14,7 @@ namespace RegisterOfIS.Services
         public async Task<bool> CreateInformationSystem(string name, string description, List<string> attributeNames, List<string> attributeValues)
         {
             #region Вернуть false если уже есть ИС
-            if (GetInformationSystemByFullName(name) != null) return false;
+            if (await GetInformationSystemByFullName(name) != null) return false;
             #endregion
 
             #region Создание временной ИС
@@ -26,7 +26,7 @@ namespace RegisterOfIS.Services
             #region Заполнить ИС аттрибутами
             for (int i = 0;i<attributeNames.Count;i++)
             {
-                var tempAttr = _attributeService.GetAttributeByFullName(attributeNames[i]);
+                var tempAttr = await _attributeService.GetAttributeByFullName(attributeNames[i]);
                 tempInfSystem.Attributes.Add(tempAttr);
                 if(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault() == null)
                 {
@@ -46,7 +46,7 @@ namespace RegisterOfIS.Services
         public async Task<bool> DeleteInformationSystem(string name)
         {
             #region Найти ИС по Названию
-            var infSystem = GetInformationSystemByFullName(name);
+            var infSystem = await GetInformationSystemByFullName(name);
             #endregion
 
             #region Вернуть false если нет такой ИС
@@ -60,10 +60,10 @@ namespace RegisterOfIS.Services
             #endregion
         }
 
-        public List<InfSystem> GetInformationSystemsByAttributeContain(string attribute)
+        public async Task<List<InfSystem>> GetInformationSystemsByAttributeContain(string attribute)
         {
             #region найти аттрибут для поиска
-            var tempattr = _attributeService.GetAttributeByFullName(attribute);
+            var tempattr = await _attributeService.GetAttributeByFullName(attribute);
             #endregion
             if (tempattr != null)
             {
@@ -82,7 +82,7 @@ namespace RegisterOfIS.Services
             return null;
         }
 
-        public List<InfSystem> GetInformationSystemsByPartOfName(string partOfName)
+        public async Task<List<InfSystem>> GetInformationSystemsByPartOfName(string partOfName)
         {
             #region Вернуть все если нет фильтра
             if (partOfName == null) return [.. _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes)];
@@ -100,7 +100,7 @@ namespace RegisterOfIS.Services
         public async Task<bool> SetAttributeToInformationalSystem(string name, string attribute, string state)
         {
             #region Найти ИС по названию
-            var infSystem = GetInformationSystemByFullName(name);
+            var infSystem = await GetInformationSystemByFullName(name);
             #endregion
 
             #region Вернуть false если нет такой ИС
@@ -108,7 +108,7 @@ namespace RegisterOfIS.Services
             #endregion
 
             #region Найти аттрибут по названию
-            var tempattr = _attributeService.GetAttributeByFullName(attribute);
+            var tempattr = await _attributeService.GetAttributeByFullName(attribute);
             #endregion
 
             #region Вернуть false если нет аттрибута
@@ -145,7 +145,7 @@ namespace RegisterOfIS.Services
             return true;
         }
 
-        public InfSystem? GetInformationSystemByFullName(string fullName)
+        public async Task<InfSystem?> GetInformationSystemByFullName(string fullName)
         {
             #region Найти ИС по названию
             return _dbContext.InfSystems.Where(infSys => infSys.Name.Equals(fullName)).FirstOrDefault();

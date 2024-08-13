@@ -18,12 +18,12 @@ namespace RegisterOfIS.Controllers
             {
                 return Ok("Created");
             }
-            return Ok();
+            return Ok("Something went wrong");
         }
         [HttpGet("getsystems")]
         public async Task<IActionResult> GetInfSystem([FromQuery] GetInfSystemRequests request)
         {
-            var systems = _infSystemService.GetInformationSystemsByPartOfName(request.Search);
+            var systems = await _infSystemService.GetInformationSystemsByPartOfName(request.Search);
             if(systems != null)
             {
                 return Ok(systems.ToList());

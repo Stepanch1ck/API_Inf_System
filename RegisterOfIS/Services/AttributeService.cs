@@ -13,7 +13,7 @@ namespace RegisterOfIS.Services
         public async Task<bool> AddNewState(string name, string state)
         {
             #region Найти аттрибут по имени
-            var attribute = GetAttributeByFullName(name);
+            var attribute = await GetAttributeByFullName(name);
             #endregion
 
             #region Вернуть false если нет аттрибута
@@ -72,7 +72,7 @@ namespace RegisterOfIS.Services
         public async Task<bool> DeleteAttribute(string name)
         {
             #region Нати аттрибут по фулл имени
-            var attr = GetAttributeByFullName(name);
+            var attr = await GetAttributeByFullName(name);
             #endregion
 
             #region Вернуть false если нет такого
@@ -120,7 +120,7 @@ namespace RegisterOfIS.Services
         public async Task<bool> RemoveState(string name, string state)
         {
             #region Найти аттрибут по имени
-            var attribute = GetAttributeByFullName(name);
+            var attribute = await GetAttributeByFullName(name);
             #endregion
 
             #region Вернуть false если нет такого аттрибута
@@ -142,7 +142,7 @@ namespace RegisterOfIS.Services
             #endregion
         }
 
-        public Attribute? GetAttributeByFullName(string fullName)
+        public async Task<Attribute?> GetAttributeByFullName(string fullName)
         {
             #region Вернуть атррибут по фулл имени
             return _dbContext.Attributes.Include(attr => attr.States).Where(attr => attr.Name.Equals(fullName)).FirstOrDefault();

@@ -11,7 +11,7 @@ namespace RegisterOfIS.Interfaces
     public interface IAttributeService
     {
         List<Attribute>? GetAttributesByPartOfName(string partOfName);
-        Attribute? GetAttributeByFullName(string fullName);
+        Task<Attribute?> GetAttributeByFullName(string fullName);
         List<Attribute>? GetAttributesByStateContain(string state);
         Task<bool> CreateAttribute(string name, string description, List<string> states);
         Task<bool> DeleteAttribute(string name);
