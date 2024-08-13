@@ -66,5 +66,10 @@ namespace RegisterOfIS.Controllers
             }
             return Ok(false);
         }
+        [HttpGet("allusers")]
+        public async Task<IActionResult> GetAllUsers([FromQuery] GetAllUsersRequest request)
+        {
+            return Ok(_userService.GetAllUsers());
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace RegisterOfIS.Interfaces
         Task<bool> CreateUser(string login, string password, string role);
         Task<bool> DeleteUser(string login);
         Task<bool> ChangePassword(string login, string newPassword);
+        List<User> GetAllUsers();
     }
 }
