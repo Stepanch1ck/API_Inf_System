@@ -35,7 +35,7 @@ namespace RegisterOfIS.Services
         public async Task<bool> CreateAttribute(string name, string description, List<string> states)
         {
             #region Проверка на существование аттрибута
-            if (GetAttributeByFullName(name) != null) return false;
+            if (await GetAttributeByFullName(name) != null) return false;
             #endregion
 
             else
