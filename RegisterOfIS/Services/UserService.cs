@@ -90,7 +90,7 @@ namespace RegisterOfIS.Services
             return [.. user];
             #endregion
         }
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
             return _dbContext.Users.ToList();
         }
