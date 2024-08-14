@@ -114,6 +114,7 @@ namespace RegisterOfIS.Services
                     return false;
                 }
                 infSystem.AttributeStatements.Add(tempAttr.States.Where(aS => aS.Value.Equals(state)).FirstOrDefault());
+                _dbContext.SaveChanges();
                 return true;
             }
             infSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value.Equals(state)).FirstOrDefault());
