@@ -30,7 +30,7 @@ namespace RegisterOfIS.Services
                 tempInfSystem.Attributes.Add(tempAttr);
                 if(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault() == null)
                 {
-                    _attributeService.AddNewState(attributeNames[i], attributeValues[i]);
+                    await _attributeService.AddNewState(attributeNames[i], attributeValues[i]);
                 }
                 tempInfSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault());
             }
