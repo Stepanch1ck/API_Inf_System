@@ -43,8 +43,7 @@ namespace RegisterOfIS.Controllers
         [HttpPut("change")]
         public async Task<IActionResult> SetNewAttributes([FromBody]ChangeAttributes request)
         {
-            _infSystemService.UpdateInformationSystem(request.Name, request.AttrNames, request.AttrValues);
-            return Ok(true);
+            return Ok(await _infSystemService.UpdateInformationSystem(request.Name, request.AttrNames, request.AttrValues));
         }
 
         [HttpGet("GetISWithAttribute")]

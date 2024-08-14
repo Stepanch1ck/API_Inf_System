@@ -99,39 +99,26 @@ namespace RegisterOfIS.Services
 
         public async Task<bool> SetAttributeToInformationalSystem(string name, string attribute, string state)
         {
-            #region Найти ИС по названию
             var infSystem = await GetInformationSystemByFullName(name);
-            #endregion
-
-            #region Вернуть false если нет такой ИС
             if (infSystem == null) return false;
-            #endregion
-
-            #region Найти аттрибут по названию
-            var tempattr = await _attributeService.GetAttributeByFullName(attribute);
-            #endregion
-
-            #region Вернуть false если нет аттрибута
-            if (tempattr == null) return false;
-            #endregion
-
-            #region Удалить аттрибуть если таковой есть
-            if (infSystem.Attributes.Contains(tempattr))
-            {
-                infSystem.Attributes.Remove(tempattr);
+            var tempAttrState = infSystem.AttributeStatements.Where(aS => aS.Attribute.Name.Equals(attribute)).FirstOrDefault();
+            if (tempAttrState != null)
+            { 
+                infSystem.AttributeStatements.Remove(tempAttrState); 
             }
-            #endregion
-
-            #region Добавить аттрибут
-            infSystem.Attributes.Add(tempattr);
-            #endregion
-
-            #region Заменить значение аттрибута
-            infSystem.AttributeStatements.Remove(infSystem.AttributeStatements.Where(attr => attr.Attribute == tempattr).FirstOrDefault());
-            infSystem.AttributeStatements.Add(tempattr.States.Where(st => st.Value == state).FirstOrDefault());
-            await _dbContext.SaveChangesAsync();
+            var tempAttr = await _attributeService.GetAttributeByFullName(attribute);
+            if (tempAttr.States.Where(st => st.Value.Equals(state)).FirstOrDefault() == null)
+            {
+                if(!(await _attributeService.AddNewState(attribute, state)))
+                {
+                    return false;
+                }
+                infSystem.AttributeStatements.Add(tempAttr.States.Where(aS => aS.Value.Equals(state)).FirstOrDefault());
+                return true;
+            }
+            infSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value.Equals(state)).FirstOrDefault());
+            _dbContext.SaveChanges();
             return true;
-            #endregion
         }
 
         public async Task<bool> UpdateInformationSystem(string name, List<string> keys, List<string> values)
@@ -148,7 +135,7 @@ namespace RegisterOfIS.Services
         public async Task<InfSystem?> GetInformationSystemByFullName(string fullName)
         {
             #region Найти ИС по названию
-            return _dbContext.InfSystems.Where(infSys => infSys.Name.Equals(fullName)).FirstOrDefault();
+            return _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes).Where(infSys => infSys.Name.Equals(fullName)).FirstOrDefault();
             #endregion
         }
     }
