@@ -22,11 +22,11 @@ namespace RegisterOfIS.Services
             #endregion
 
             #region Удалить Пользователя
+            user.Password = PasswordService.HashPassword(newPassword);
+            user.RoleName = role;
+            user.Role = _roleService.GetRoleByName(role);
+            await _dbContext.SaveChangesAsync();
             #endregion
-
-            #region Создать Пользователя
-            await CreateUser(login, newPassword, role);
-            #endregion 
 
             return true;
         }

@@ -58,7 +58,7 @@ namespace RegisterOfIS.Controllers
             return Ok(_roleService.GetAllRoles());
         }
         [HttpPut("changeUser")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangeUser request)
+        public async Task<IActionResult> ChangeUser([FromBody] ChangeUser request)
         {
             if (await _userService.ChangeUser(request.Login, request.Password, request.Role))
             {
