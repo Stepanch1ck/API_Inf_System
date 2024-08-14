@@ -11,7 +11,7 @@ namespace RegisterOfIS.Services
         private readonly PostgresDbContext _dbContext = dbContext;
         private readonly RoleService _roleService = new(dbContext);
 
-        public async Task<bool> ChangePassword(string login, string newPassword)
+        public async Task<bool> ChangeUser(string login, string newPassword, string role)
         {
             #region НайтиПользователя
             var user = GetByLogin(login);
@@ -25,7 +25,7 @@ namespace RegisterOfIS.Services
             #endregion
 
             #region Создать Пользователя
-            await CreateUser(login, newPassword, user.RoleName);
+            await CreateUser(login, newPassword, role);
             #endregion 
 
             return true;

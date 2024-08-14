@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace RegisterOfIS.Requests
 {
     public record UserRegistration(string Username, string Password, string Role);
-    public record ChangePawword(string Login, string Password);
+    public record ChangeUser(string Login, string Password, string Role);
     public record GetAllUsersRequest();
 }
