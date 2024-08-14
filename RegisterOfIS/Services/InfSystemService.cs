@@ -27,12 +27,15 @@ namespace RegisterOfIS.Services
             for (int i = 0;i<attributeNames.Count;i++)
             {
                 var tempAttr = await _attributeService.GetAttributeByFullName(attributeNames[i]);
-                tempInfSystem.Attributes.Add(tempAttr);
-                if(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault() == null)
+                if(tempAttr != null)
                 {
-                    await _attributeService.AddNewState(attributeNames[i], attributeValues[i]);
+                    tempInfSystem.Attributes.Add(tempAttr);
+                    if(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault() == null)
+                    {
+                        await _attributeService.AddNewState(attributeNames[i], attributeValues[i]);
+                    }
+                    tempInfSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault());
                 }
-                tempInfSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault());
             }
             #endregion
 
@@ -104,7 +107,8 @@ namespace RegisterOfIS.Services
             var tempAttrState = infSystem.AttributeStatements.Where(aS => aS.Attribute.Name.Equals(attribute)).FirstOrDefault();
             if (tempAttrState != null)
             { 
-                infSystem.AttributeStatements.Remove(tempAttrState); 
+                infSystem.AttributeStatements.Remove(tempAttrState);
+                _dbContext.SaveChanges();
             }
             var tempAttr = await _attributeService.GetAttributeByFullName(attribute);
             if (tempAttr.States.Where(st => st.Value.Equals(state)).FirstOrDefault() == null)
