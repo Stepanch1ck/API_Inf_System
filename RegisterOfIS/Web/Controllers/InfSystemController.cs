@@ -41,9 +41,9 @@ namespace RegisterOfIS.Controllers
         }
 
         [HttpPut("change")]
-        public async Task<IActionResult> SetNewAttributes([FromBody]ChangeAttributes request)
+        public async Task<IActionResult> SetNewAttributes([FromBody] ChangeInfSystem request)
         {
-            return Ok(await _infSystemService.UpdateInformationSystem(request.Name, request.AttrNames, request.AttrValues));
+            return Ok(await _infSystemService.UpdateInformationSystem(request.Name, request.newName, request.newDescription ,request.AttrNames, request.AttrValues));
         }
 
         [HttpGet("GetISWithAttribute")]

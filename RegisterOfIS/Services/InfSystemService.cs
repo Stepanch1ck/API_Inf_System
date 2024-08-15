@@ -111,6 +111,10 @@ namespace RegisterOfIS.Services
                 _dbContext.SaveChanges();
             }
             var tempAttr = await _attributeService.GetAttributeByFullName(attribute);
+            if (tempAttr == null)
+            {
+                return false;
+            }
             if (tempAttr.States.Where(st => st.Value.Equals(state)).FirstOrDefault() == null)
             {
                 if(!(await _attributeService.AddNewState(attribute, state)))
@@ -126,14 +130,31 @@ namespace RegisterOfIS.Services
             return true;
         }
 
-        public async Task<bool> UpdateInformationSystem(string name, List<string> keys, List<string> values)
+        public async Task<bool> UpdateInformationSystem(string name,string newName, string newDescription, List<string> keys, List<string> values)
         {
-            #region Перезаполнить аттрибуты
-            for (int i = 0; i < keys.Count;i++)
+            var infSystem = await GetInformationSystemByFullName(name);
+            if (infSystem == null)
             {
-                await SetAttributeToInformationalSystem(name, keys[i], values[i]);
+                return false;
             }
-            #endregion
+            else
+            {
+                if (newName != null)
+                {
+                    infSystem.Name = newName;
+                }
+                if(newDescription != null)
+                { 
+                    infSystem.Description = newDescription;
+                }
+                #region Перезаполнить аттрибуты
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    await SetAttributeToInformationalSystem(name, keys[i], values[i]);
+                }
+                #endregion
+            }
+            await _dbContext.SaveChangesAsync();
             return true;
         }
 
