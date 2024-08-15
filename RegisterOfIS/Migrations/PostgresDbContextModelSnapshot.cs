@@ -244,6 +244,10 @@ namespace RegisterOfIS.Migrations
                     b.Property<int>("AttributeId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("AttributeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("text");

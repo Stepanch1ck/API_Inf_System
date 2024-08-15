@@ -30,6 +30,7 @@ namespace RegisterOfIS.Web.Controllers
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
             var result = await _basicAuthService.SignIn(request.UserName, request.Password);
+             
 
             if (!result.Success) return Unauthorized();
 

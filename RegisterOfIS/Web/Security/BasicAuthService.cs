@@ -40,7 +40,6 @@ namespace RegisterOfIS.Web.Security
             var user = await _ctx.Users.Include(u => u.Role).Where(f => f.Login == userName).FirstOrDefaultAsync();
 
 
-
             if (user != null && PasswordService.VerifyPassword(password, user.Password))
             {
 
