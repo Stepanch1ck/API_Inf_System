@@ -88,9 +88,10 @@ namespace RegisterOfIS.Services
         public async Task<List<InfSystem>> GetInformationSystemsByPartOfName(string partOfName)
         {
             #region Вернуть все если нет фильтра
+            
             if (partOfName == null) return [.. _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes)];
             #endregion
-
+            
             #region Найти все ИС по поисковому запросу
             var infSystems = _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Where(sys => sys.Name.Contains(partOfName));
             #endregion
@@ -121,11 +122,9 @@ namespace RegisterOfIS.Services
                 {
                     return false;
                 }
-                infSystem.AttributeStatements.Add(tempAttr.States.Where(aS => aS.Value.Equals(state)).FirstOrDefault());
-                _dbContext.SaveChanges();
-                return true;
             }
-            infSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value.Equals(state)).FirstOrDefault());
+            var statement = _dbContext.AttributeStatements.Include(aS => aS.Attribute).Where(aS => aS.Attribute.Name.Equals(attribute)).Where(aS => aS.Value.Equals(state)).FirstOrDefault();
+            infSystem.AttributeStatements.Add(statement);
             _dbContext.SaveChanges();
             return true;
         }
@@ -147,10 +146,11 @@ namespace RegisterOfIS.Services
                 { 
                     infSystem.Description = newDescription;
                 }
+                await _dbContext.SaveChangesAsync();
                 #region Перезаполнить аттрибуты
                 for (int i = 0; i < keys.Count; i++)
                 {
-                    await SetAttributeToInformationalSystem(name, keys[i], values[i]);
+                    await SetAttributeToInformationalSystem(newName, keys[i], values[i]);
                 }
                 #endregion
             }

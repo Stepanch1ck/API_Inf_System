@@ -27,6 +27,7 @@ namespace RegisterOfIS.Services
             #region Добавить новое значение
             var tempAttrStatement = new AttributeStatement(attribute, state);
             attribute.States.Add(tempAttrStatement);
+            await _dbContext.AttributeStatements.AddAsync(tempAttrStatement);
             await _dbContext.SaveChangesAsync();
             return true;
             #endregion
