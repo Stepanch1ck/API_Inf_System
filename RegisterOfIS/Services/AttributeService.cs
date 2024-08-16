@@ -149,5 +149,15 @@ namespace RegisterOfIS.Services
             return _dbContext.Attributes.Include(attr => attr.States).Where(attr => attr.Name.Equals(fullName)).FirstOrDefault();
             #endregion
         }
+
+        public async Task<bool> ChangeAttribute(string name, string newName, string description)
+        {
+            var attr = await GetAttributeByFullName(name);
+            if (attr == null) return false;
+            if(newName != null) attr.Name = newName;
+            if(description != null) attr.Description = description;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

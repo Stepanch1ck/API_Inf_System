@@ -17,5 +17,6 @@ namespace RegisterOfIS.Interfaces
         Task<bool> DeleteAttribute(string name);
         Task<bool> AddNewState(string name, string state);
         Task<bool> RemoveState(string name, string state);
+        Task<bool> ChangeAttribute(string name, string newName, string description);
     }
 }

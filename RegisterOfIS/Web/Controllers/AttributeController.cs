@@ -61,5 +61,13 @@ namespace RegisterOfIS.Controllers
             }
             return Ok("Something went Wrong");
         }
+
+        [HttpPut("change")]
+        public async Task<IActionResult> ChangeAttribute([FromBody] ChangeAttributeRequest request)
+        {
+            if (await _attributeService.ChangeAttribute(request.Name, request.NewName, request.Description)) return Ok(true);
+            return Ok(false);
+        }
+
     }
 }

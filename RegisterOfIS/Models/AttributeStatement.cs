@@ -27,7 +27,7 @@ namespace RegisterOfIS.Models
         {
             this.Attribute = attribute;
             this.Value = value;
-            this.AttributeName = attribute.Description;
+            this.AttributeName = attribute.Name;
         }
     }
 }

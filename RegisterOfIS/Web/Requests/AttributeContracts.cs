@@ -11,4 +11,5 @@ namespace RegisterOfIS.Requests
     public record DeleteAttribute(string Name);
     public record AddNewStateRequest(string Name, string Value);
     public record RemoveStateRequest(string Name, string Value);
+    public record ChangeAttributeRequest(string Name, string NewName, string Description);
 }
