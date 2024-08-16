@@ -3,6 +3,7 @@ using RegisterOfIS.Interfaces;
 using RegisterOfIS.Models;
 using RegisterOfIS.Database;
 using Attribute = RegisterOfIS.Models.Attribute;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RegisterOfIS.Services
 {
@@ -47,11 +48,17 @@ namespace RegisterOfIS.Services
                 #endregion
 
                 #region Заполнить список со значениями
-                foreach (var state in states)
+                if(states != null)
                 {
-                    var tempStatement = new AttributeStatement(tempAttribute, state);
-                    await _dbContext.AttributeStatements.AddAsync(tempStatement);
-                    tempAttrStatements.Add(tempStatement);
+                    foreach (var state in states)
+                    {
+                        if (!state.IsNullOrEmpty())
+                        {
+                            var tempStatement = new AttributeStatement(tempAttribute, state);
+                            await _dbContext.AttributeStatements.AddAsync(tempStatement);
+                            tempAttrStatements.Add(tempStatement);
+                        }
+                    }
                 }
                 #endregion
 
