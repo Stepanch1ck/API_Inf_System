@@ -6,13 +6,11 @@ namespace RegisterOfIS.Models
 {
     public class User
     {
-        [JsonIgnore]
         public int Id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
-        [JsonIgnore]
         public Role? Role { get; set; }
-        public string RoleName { get; set; }
+        public int RoleId { get; set; }
         public User(string login, string password, Role role)
         {
             this.Login = login;

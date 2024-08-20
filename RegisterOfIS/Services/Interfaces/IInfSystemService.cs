@@ -1,21 +1,21 @@
 ﻿using RegisterOfIS.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RegisterOfIS.Requests;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RegisterOfIS.Interfaces
 {
     public interface IInfSystemService
     {
-        Task<bool> CreateInformationSystem(string name, string description, List<string> keys, List<string> values);
-        Task<bool> DeleteInformationSystem(string name);
-        Task<bool> UpdateInformationSystem(string name, string newName, string newDescription, List<string> keys, List<string> values);
-        Task<List<InfSystem>> GetInformationSystemsByPartOfName(string partOfName);
-        Task<InfSystem?> GetInformationSystemByFullName(string fullName);
-        Task<List<InfSystem>> GetInformationSystemsByAttributeContain(string attribute);
-        Task<bool> SetAttributeToInformationalSystem(string name, string attribute, string state);
+        InfSystem? Find([NotNull] int id);
+        InfSystem Get(int id);
+        Task<List<InfSystem>> Search(SearchInfSystemsForm form);
+        Task<InfSystem?> Create(CreateInfSystemRequest data);
+        Task<InfSystem?> Update(int id, ChangeInfSystemRequest data);
+        void Delete(int id);
+
+        List<AttributeStateDto> GetAttrs(int id);
+        Task<bool> AddAttrs(int id, Dictionary<int, string> data);
+        Task<bool> RemoveAttrs(int id, List<int> data);
 
     }
 }

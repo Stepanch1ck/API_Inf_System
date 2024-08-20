@@ -2,6 +2,8 @@
 using RegisterOfIS.Requests;
 using RegisterOfIS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics.CodeAnalysis;
+using RegisterOfIS.Models;
 
 namespace RegisterOfIS.Controllers
 {
@@ -11,50 +13,54 @@ namespace RegisterOfIS.Controllers
     public class InfSystemController(IInfSystemService infSystemService) : ControllerBase
     {
         private readonly IInfSystemService _infSystemService = infSystemService;
-        [HttpPost("create")]
-        public async Task<IActionResult> AddNewInfSystem([FromBody] CreateInfSystem request)
+
+        [HttpGet]
+        public async Task<ActionResult<List<InfSystem>>> SearchInfSystems([FromQuery][AllowNull] SearchInfSystemsForm form)
         {
-            if (await _infSystemService.CreateInformationSystem(request.Name, request.Description, request.AttributeKeys, request.AttributeValues))
-            {
-                return Ok("Created");
-            }
-            return Ok("Something went wrong");
-        }
-        [HttpGet("getsystems")]
-        public async Task<IActionResult> GetInfSystem([FromQuery] GetInfSystemRequests request)
-        {
-            var systems = await _infSystemService.GetInformationSystemsByPartOfName(request.Search);
-            if(systems != null)
-            {
-                return Ok(systems.ToList());
-            }
-            return Ok("No Information Systems");
-        }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteInfSystem([FromQuery] string infSystemName)
-        {
-            if(await _infSystemService.DeleteInformationSystem(infSystemName))
-            {
-                return Ok("Deleted");
-            }
-            return Ok("Information System does not exist");
+            return Ok(await _infSystemService.Search(form));
         }
 
-        [HttpPut("change")]
-        public async Task<IActionResult> SetNewAttributes([FromBody] ChangeInfSystem request)
+        [HttpGet("{id}")]
+        public ActionResult<InfSystem> GetInfSystemById([FromRoute] int id)
         {
-            return Ok(await _infSystemService.UpdateInformationSystem(request.Name, request.newName, request.newDescription ,request.AttrNames, request.AttrValues));
+            return Ok(_infSystemService.Get(id));
         }
 
-        [HttpGet("GetISWithAttribute")]
-        public async Task<IActionResult> GetISByAttributes([FromQuery] GetInfSystemWithAttribute request)
+        [HttpPost]
+        public async Task<ActionResult<InfSystem>> CreateInfSystem([FromBody] CreateInfSystemRequest request)
         {
-            var systems = _infSystemService.GetInformationSystemsByAttributeContain(request.AttrName);
-            if (systems == null)
-            {
-                return Ok("No IS with this attribute");
-            }
-            return Ok(systems);
+            return Ok(await _infSystemService.Create(request));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<InfSystem>> UpdateInfSystem([FromRoute] int id, [FromBody] ChangeInfSystemRequest request)
+        {
+            return Ok(await _infSystemService.Update(id, request));
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult<string> DeleteInfSystem([FromRoute] int id)
+        {
+            _infSystemService.Delete(id);
+            return NoContent();
+        }
+
+        [HttpGet("{id}/Attrs")]
+        public ActionResult<List<AttributeStateDto>> GetAttrs([FromRoute] int id)
+        {
+            return Ok(_infSystemService.GetAttrs(id));
+        }
+
+        [HttpPut("{id}/Attrs")]
+        public async Task<IActionResult> AddAttrs([FromRoute] int id, [FromBody] Dictionary<int, string> data)
+        {
+            return Ok(await _infSystemService.AddAttrs(id, data));
+        }
+
+        [HttpDelete("{id}/Attrs")]
+        public async Task<IActionResult> RemoveAttrs([FromRoute] int id, [FromBody] List<int> data)
+        {
+            return Ok(await _infSystemService.RemoveAttrs(id, data));
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using RegisterOfIS.Interfaces;
 using RegisterOfIS.Models;
 using RegisterOfIS.Database;
-using RegisterOfIS.Services;
 using Attribute = RegisterOfIS.Models.Attribute;
 using Microsoft.EntityFrameworkCore;
+using RegisterOfIS.Requests;
+using System.Diagnostics.CodeAnalysis;
+using LinqKit;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RegisterOfIS.Services
 {
@@ -11,158 +14,136 @@ namespace RegisterOfIS.Services
     {
         private readonly PostgresDbContext _dbContext = dbContext;
         private readonly AttributeService _attributeService = new(dbContext);
-        public async Task<bool> CreateInformationSystem(string name, string description, List<string> attributeNames, List<string> attributeValues)
+
+
+        private async Task<bool> ExistsById(int id)
         {
-            #region Вернуть false если уже есть ИС
-            if (await GetInformationSystemByFullName(name) != null) return false;
-            #endregion
-
-            #region Создание временной ИС
-            var tempInfSystem = new InfSystem();
-            tempInfSystem.Name = name;
-            tempInfSystem.Description = description;
-            #endregion
-
-            #region Заполнить ИС аттрибутами
-            for (int i = 0;i<attributeNames.Count;i++)
-            {
-                var tempAttr = await _attributeService.GetAttributeByFullName(attributeNames[i]);
-                if(tempAttr != null)
-                {
-                    tempInfSystem.Attributes.Add(tempAttr);
-                    if(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault() == null)
-                    {
-                        await _attributeService.AddNewState(attributeNames[i], attributeValues[i]);
-                    }
-                    tempInfSystem.AttributeStatements.Add(tempAttr.States.Where(st => st.Value == attributeValues[i]).FirstOrDefault());
-                }
-            }
-            #endregion
-
-            #region Добавить ИС в БД
-            await _dbContext.InfSystems.AddAsync(tempInfSystem);
-            await _dbContext.SaveChangesAsync();
-            return true;
-            #endregion
+            return await _dbContext.InfSystems.Where(a => a.Id.Equals(id)).FirstOrDefaultAsync() != null;
         }
 
-        public async Task<bool> DeleteInformationSystem(string name)
+        private async Task<bool> ExistsByName(string name)
         {
-            #region Найти ИС по Названию
-            var infSystem = await GetInformationSystemByFullName(name);
-            #endregion
-
-            #region Вернуть false если нет такой ИС
-            if (infSystem == null) return false;
-            #endregion
-
-            #region Удалить ИС из бд
-            _dbContext.InfSystems.Remove(infSystem);
-            await _dbContext.SaveChangesAsync();
-            return true;
-            #endregion
+            return await _dbContext.InfSystems.Where(a => a.Name.Equals(name)).FirstOrDefaultAsync() != null;
         }
 
-        public async Task<List<InfSystem>> GetInformationSystemsByAttributeContain(string attribute)
+        public bool IsValidFixedAttributeValue(int id, string Value)
         {
-            #region найти аттрибут для поиска
-            var tempattr = await _attributeService.GetAttributeByFullName(attribute);
-            #endregion
-            if (tempattr != null)
-            {
-                #region найти ИС с этим аттрибутом
-                var infSystems = _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes).Where(sys => sys.Attributes.Contains(tempattr));
-                #endregion
-
-                #region Вернуть null если таких нет
-                if (infSystems.FirstOrDefault() == null) return null;
-                #endregion
-
-                #region Вернуть список ИС
-                return [.. infSystems];
-                #endregion
-            }
-            return null;
+            return _dbContext.AttributeDict
+                .Where(d => d.AttributeId.Equals(id))
+                .Select(d => d.Value)
+                .Contains(Value);
         }
 
-        public async Task<List<InfSystem>> GetInformationSystemsByPartOfName(string partOfName)
+        public InfSystem? Find([NotNull] int id)
         {
-            #region Вернуть все если нет фильтра
-            
-            if (partOfName == null) return [.. _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes)];
-            #endregion
-            
-            #region Найти все ИС по поисковому запросу
-            var infSystems = _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Where(sys => sys.Name.Contains(partOfName));
-            #endregion
-
-            #region Вернуть список ИС
-            return [.. infSystems];
-            #endregion
+            return _dbContext.InfSystems
+                .Include(infs => infs.AttributeStates)
+                .Where(infs => infs.Id.Equals(id))
+                .FirstOrDefault();
         }
 
-        public async Task<bool> SetAttributeToInformationalSystem(string name, string attribute, string state)
+        public InfSystem Get(int id)
         {
-            var infSystem = await GetInformationSystemByFullName(name);
-            if (infSystem == null) return false;
-            var tempAttrState = infSystem.AttributeStatements.Where(aS => aS.Attribute.Name.Equals(attribute)).FirstOrDefault();
-            if (tempAttrState != null)
-            { 
-                infSystem.AttributeStatements.Remove(tempAttrState);
-                _dbContext.SaveChanges();
-            }
-            var tempAttr = await _attributeService.GetAttributeByFullName(attribute);
-            if (tempAttr == null)
-            {
-                return false;
-            }
-            if (tempAttr.States.Where(st => st.Value.Equals(state)).FirstOrDefault() == null)
-            {
-                if(!(await _attributeService.AddNewState(attribute, state)))
-                {
-                    return false;
-                }
-            }
-            var statement = _dbContext.AttributeStatements.Include(aS => aS.Attribute).Where(aS => aS.Attribute.Name.Equals(attribute)).Where(aS => aS.Value.Equals(state)).FirstOrDefault();
-            infSystem.AttributeStatements.Add(statement);
-            _dbContext.SaveChanges();
-            return true;
+            return Find(id) ?? throw new ArgumentNullException();
         }
 
-        public async Task<bool> UpdateInformationSystem(string name,string newName, string newDescription, List<string> keys, List<string> values)
+        public async Task<List<InfSystem>> Search(SearchInfSystemsForm form)
         {
-            var infSystem = await GetInformationSystemByFullName(name);
-            if (infSystem == null)
+            var predicate = PredicateBuilder.New<InfSystem>(true);
+
+            var result = _dbContext.InfSystems
+                .AsNoTracking()
+                .AsExpandable();
+
+            if (!form.Name.IsNullOrEmpty())
             {
-                return false;
+                predicate.And(val => val.Name.StartsWith(form.Name));
             }
+            if (!form.Attr.IsNullOrEmpty())
+            {
+                predicate.And(val => val.Attributes.Select(a => a.Name).Contains(form.Attr));
+            }
+            return await result.Where(predicate).ToListAsync();
+
+        }
+
+        public async Task<InfSystem?> Create(CreateInfSystemRequest data)
+        {
+            if (await ExistsByName(data.Name)) return null;
+
             else
             {
-                if (newName != null)
+                InfSystem infSystem = new InfSystem(data.Name, data.Description);
+                await _dbContext.AddAsync(infSystem);
+                var attrs = _dbContext.Attributes.Where(a => data.attributes.Keys.Contains(a.Name));
+                infSystem.AttributeStates = new List<AttributeState>();
+
+                string value;
+                foreach (var attr in attrs)
                 {
-                    infSystem.Name = newName;
+                    value = data.attributes[attr.Name];
+                    if (!attr.IsFixed)
+                    {
+                        infSystem.AttributeStates.Add(new AttributeState(attr, infSystem, value));
+                    }
+                    else
+                    {
+                        if (IsValidFixedAttributeValue(attr.Id, value))
+                        {
+                            infSystem.AttributeStates.Add(new AttributeState(attr, infSystem, value));
+                        }
+                    }
                 }
-                if(newDescription != null)
-                { 
-                    infSystem.Description = newDescription;
-                }
+
                 await _dbContext.SaveChangesAsync();
-                #region Перезаполнить аттрибуты
-                for (int i = 0; i < keys.Count; i++)
-                {
-                    await SetAttributeToInformationalSystem(newName, keys[i], values[i]);
-                }
-                #endregion
+                return infSystem;
             }
+        }
+
+        public async Task<InfSystem?> Update(int id, ChangeInfSystemRequest data)
+        {
+            InfSystem infSystem = Get(id);
+
+            infSystem.Name = data.Name;
+            infSystem.Description = data.Description;
             await _dbContext.SaveChangesAsync();
+            return infSystem;
+        }
+
+        public void Delete(int id)
+        {
+            _dbContext.InfSystems.Remove(Get(id));
+        }
+
+        public List<AttributeStateDto> GetAttrs(int id)
+        {
+            return _dbContext.AttributeStates.Include(st => st.Attribute).Where(st => st.InfSystemId.Equals(id)).ToList()
+                .ConvertAll(st => new AttributeStateDto(st.Attribute.Name, st.Value));
+        }
+
+        public async Task<bool> AddAttrs(int id, Dictionary<int, string> data)
+        {
+            var infSystem = Get(id);
+            var values = infSystem.Attributes.Select(a => a.Id);
+            var vals = _dbContext.Attributes.Select(a => a.Id);
+
+            List<AttributeState> states = data.Where(d => !values.Contains(d.Key) && vals.Contains(d.Key))
+                .ToList()
+                .ConvertAll(val => new AttributeState(val.Key, infSystem.Id, val.Value));
+            ((List<AttributeState>)infSystem.AttributeStates).AddRange(states);
+            await _dbContext.SaveChangesAsync();
+
             return true;
         }
 
-        public async Task<InfSystem?> GetInformationSystemByFullName(string fullName)
+        public async Task<bool> RemoveAttrs(int id, List<int> data)
         {
-            #region Найти ИС по названию
-            return _dbContext.InfSystems.Include(iS => iS.AttributeStatements).Include(iS => iS.Attributes).Where(infSys => infSys.Name.Equals(fullName)).FirstOrDefault();
-            #endregion
+            var infSystem = Get(id);
+
+            bool result = ((List<AttributeState>)infSystem.AttributeStates).RemoveAll(st => data.Contains(st.AttributeId)) >= 1;
+            await _dbContext.SaveChangesAsync();
+
+            return result;
         }
     }
 }

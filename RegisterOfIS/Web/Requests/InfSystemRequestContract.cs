@@ -2,8 +2,7 @@
 
 namespace RegisterOfIS.Requests
 {
-    public record GetInfSystemRequests(string? Search, string? Attributes);
-    public record CreateInfSystem(string Name, string Description, List<string> AttributeKeys, List<string> AttributeValues);
-    public record ChangeInfSystem(string Name,string newName, string newDescription, List<string> AttrNames, List<string> AttrValues);
-    public record GetInfSystemWithAttribute(string AttrName);
+    public record ChangeInfSystemRequest(string Name, string Description);
+    public record CreateInfSystemRequest(string Name, string Description, Dictionary<string, string> attributes);
+    public record SearchInfSystemsForm(string? Name, string? Attr);
 }

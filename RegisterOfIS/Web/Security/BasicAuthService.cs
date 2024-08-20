@@ -99,7 +99,7 @@ namespace RegisterOfIS.Web.Security
             {
                 new Claim("id", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.Role, user.RoleName)
+                new Claim(ClaimTypes.Role, user.Role.Name)
             };
 
             return claims;

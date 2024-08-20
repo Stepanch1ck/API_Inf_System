@@ -10,9 +10,9 @@ namespace RegisterOfIS.Database.DbConfig
         {
             e.ToTable("refresh_tokens");
 
-            e.HasKey(e => e.Token).HasName("refresh_token_pkey");
+            e.HasKey(e => e.Id).HasName("refresh_token_pkey");
 
-            e.Property(e => e.Token).HasColumnName("token");
+            e.Property(e => e.Id).HasColumnName("id");
         }
     }
 }
