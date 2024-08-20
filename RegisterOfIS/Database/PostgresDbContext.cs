@@ -12,7 +12,8 @@ namespace RegisterOfIS.Database
         public DbSet<InfSystem> InfSystems => Set<InfSystem>();
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<Attribute> Attributes => Set<Attribute>();
-        public DbSet<AttributeStatement> AttributeStatements => Set<AttributeStatement>();
+        public DbSet<AttributeDict> AttributeDict => Set<AttributeDict>();
+        public DbSet<AttributeState> AttributeStates => Set<AttributeState>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

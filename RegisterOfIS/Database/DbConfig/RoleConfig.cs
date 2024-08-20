@@ -10,7 +10,10 @@ namespace RegisterOfIS.Database.DbConfig
         {
             e.ToTable("roles");
 
-            e.HasKey(e => e.Name).HasName("role_pkey");
+            e.HasKey(e => e.Id).HasName("role_pkey");
+
+            e.Property(e => e.Id)
+                .HasColumnName("id");
 
             e.Property(e => e.Name)
                 .HasColumnName("name");
@@ -19,9 +22,9 @@ namespace RegisterOfIS.Database.DbConfig
                 .HasColumnName("description");
 
             e.HasData(
-                new Role { Name = "ADMIN", Description = "full access"},
-                new Role { Name = "CREATOR", Description = "create and read access"},
-                new Role { Name = "READER", Description = "read access"}
+                new Role { Id = -1, Name = "ADMIN", Description = "full access"},
+                new Role { Id = -2, Name = "CREATOR", Description = "create and read access"},
+                new Role { Id = -3, Name = "READER", Description = "read access"}
                 );
         }
     }

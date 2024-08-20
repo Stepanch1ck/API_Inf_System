@@ -23,7 +23,6 @@ namespace RegisterOfIS.Services
 
             #region Удалить Пользователя
             user.Password = PasswordService.HashPassword(newPassword);
-            user.RoleName = role;
             user.Role = _roleService.GetRoleByName(role);
             await _dbContext.SaveChangesAsync();
             #endregion

@@ -22,21 +22,6 @@ namespace RegisterOfIS.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AttributeStatementInfSystem", b =>
-                {
-                    b.Property<int>("AttributeStatementsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("InfSystemsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("AttributeStatementsId", "InfSystemsId");
-
-                    b.HasIndex("InfSystemsId");
-
-                    b.ToTable("AttributeStatementInfSystem");
-                });
-
             modelBuilder.Entity("RegisterOfIS.Models.Attribute", b =>
                 {
                     b.Property<int>("Id")
@@ -49,16 +34,14 @@ namespace RegisterOfIS.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("InfSystemId")
-                        .HasColumnType("integer");
+                    b.Property<bool>("IsFixed")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InfSystemId");
 
                     b.ToTable("attributes", (string)null);
 
@@ -67,173 +50,201 @@ namespace RegisterOfIS.Migrations
                         {
                             Id = -1,
                             Description = "Назначение",
+                            IsFixed = false,
                             Name = "Purpose"
                         },
                         new
                         {
                             Id = -2,
                             Description = "Дата ввода в эксплуатацию",
+                            IsFixed = false,
                             Name = "WhenStartedUsing"
                         },
                         new
                         {
                             Id = -3,
                             Description = "Разработчик",
+                            IsFixed = false,
                             Name = "Developer"
                         },
                         new
                         {
                             Id = -4,
                             Description = "Информация по лицензиям",
+                            IsFixed = false,
                             Name = "LicenseInformation"
                         },
                         new
                         {
                             Id = -5,
                             Description = "Бизнес-Планирование",
+                            IsFixed = false,
                             Name = "Business-Planning"
                         },
                         new
                         {
                             Id = -6,
                             Description = "Область применения(бизнес-процессы)",
+                            IsFixed = false,
                             Name = "UsingSphere"
                         },
                         new
                         {
                             Id = -7,
                             Description = "Основные Функции",
+                            IsFixed = false,
                             Name = "BaseFunctions"
                         },
                         new
                         {
                             Id = -8,
                             Description = "Ответственное за работу ИС структурноое подразделение",
+                            IsFixed = false,
                             Name = "ResponsibleDepartment"
                         },
                         new
                         {
                             Id = -9,
                             Description = "Контакты ответственного должностного лица",
+                            IsFixed = false,
                             Name = "ResponsiblePersonContacts"
                         },
                         new
                         {
                             Id = -10,
                             Description = "Дата внесения изменений в сведения о ИС",
+                            IsFixed = false,
                             Name = "InformationEditDate"
                         },
                         new
                         {
                             Id = -11,
                             Description = "Серверная ОС",
+                            IsFixed = false,
                             Name = "ServerOS"
                         },
                         new
                         {
                             Id = -12,
                             Description = "Клиентские ОС",
+                            IsFixed = false,
                             Name = "CLientOS"
                         },
                         new
                         {
                             Id = -13,
                             Description = "СУБД",
+                            IsFixed = false,
                             Name = "DataBase"
                         },
                         new
                         {
                             Id = -14,
                             Description = "Дополнительное прикладное ПО",
+                            IsFixed = false,
                             Name = "AdditionalSoftware"
                         },
                         new
                         {
                             Id = -15,
                             Description = "Количество рабочих мест",
+                            IsFixed = false,
                             Name = "NumberOfJobs"
                         },
                         new
                         {
                             Id = -16,
                             Description = "Наличие ролевого доступа",
+                            IsFixed = false,
                             Name = "RoleAccessAvailability"
                         },
                         new
                         {
                             Id = -17,
                             Description = "Способы авторизации пользователей",
+                            IsFixed = false,
                             Name = "UserAuthorizationMethods"
                         },
                         new
                         {
                             Id = -18,
                             Description = "Периодичность обновления информации",
+                            IsFixed = false,
                             Name = "InformationUpdateFrequency"
                         },
                         new
                         {
                             Id = -19,
                             Description = "Срок хранения информации",
+                            IsFixed = false,
                             Name = "InformationStoragePeriod"
                         },
                         new
                         {
                             Id = -20,
                             Description = "Архитектура ИС",
+                            IsFixed = false,
                             Name = "ISArchitecture"
                         },
                         new
                         {
                             Id = -21,
                             Description = "Список серверов и их функциональные роли",
+                            IsFixed = false,
                             Name = "ListOfServersAndRoles"
                         },
                         new
                         {
                             Id = -22,
                             Description = "Наличие руководства пользователя ИС",
+                            IsFixed = false,
                             Name = "UserManualAvailability"
                         },
                         new
                         {
                             Id = -23,
                             Description = "Наличие руководства администратора ИС",
+                            IsFixed = false,
                             Name = "AdminManualAvailability"
                         },
                         new
                         {
                             Id = -24,
                             Description = "Список компонентов ИС с указанием стека (средств разработки)",
+                            IsFixed = false,
                             Name = "ListOfISComponentsWithStack"
                         },
                         new
                         {
                             Id = -25,
                             Description = "Наличие исходных кодов ИС в корпоративном репозитории",
+                            IsFixed = false,
                             Name = "SourceCodeInCorporateREpositoryAvailability"
                         },
                         new
                         {
                             Id = -26,
                             Description = "Описание внешнего (интеграционного) API ИС (при наличии)",
+                            IsFixed = false,
                             Name = "DescriptonOfExternalAPIs"
                         },
                         new
                         {
                             Id = -27,
                             Description = "Список интегрируемых ИС, направление и описание передаваемых данных",
+                            IsFixed = false,
                             Name = "ListOfIntegratedISAndDescriptionOfTransmittedData"
                         },
                         new
                         {
                             Id = -28,
                             Description = "Прочие информационные ссылки по ИС",
+                            IsFixed = false,
                             Name = "OtherIPInformationLinks"
                         });
                 });
 
-            modelBuilder.Entity("RegisterOfIS.Models.AttributeStatement", b =>
+            modelBuilder.Entity("RegisterOfIS.Models.AttributeDict", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -244,10 +255,6 @@ namespace RegisterOfIS.Migrations
                     b.Property<int>("AttributeId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("AttributeName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("text");
@@ -256,7 +263,27 @@ namespace RegisterOfIS.Migrations
 
                     b.HasIndex("AttributeId");
 
-                    b.ToTable("attribute_statements", (string)null);
+                    b.ToTable("attribute_dict", (string)null);
+                });
+
+            modelBuilder.Entity("RegisterOfIS.Models.AttributeState", b =>
+                {
+                    b.Property<int>("InfSystemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AttributeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("InfSystemId", "AttributeId")
+                        .HasName("attribute_state_pkey");
+
+                    b.HasIndex("AttributeId");
+
+                    b.ToTable("attribute_states", (string)null);
                 });
 
             modelBuilder.Entity("RegisterOfIS.Models.InfSystem", b =>
@@ -296,9 +323,12 @@ namespace RegisterOfIS.Migrations
 
             modelBuilder.Entity("RegisterOfIS.Models.RefreshToken", b =>
                 {
-                    b.Property<string>("Token")
-                        .HasColumnType("text")
-                        .HasColumnName("token");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
@@ -306,11 +336,15 @@ namespace RegisterOfIS.Migrations
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Token")
+                    b.HasKey("Id")
                         .HasName("refresh_token_pkey");
 
                     b.ToTable("refresh_tokens", (string)null);
@@ -318,16 +352,24 @@ namespace RegisterOfIS.Migrations
 
             modelBuilder.Entity("RegisterOfIS.Models.Role", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("description");
 
-                    b.HasKey("Name")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
                         .HasName("role_pkey");
 
                     b.ToTable("roles", (string)null);
@@ -335,18 +377,21 @@ namespace RegisterOfIS.Migrations
                     b.HasData(
                         new
                         {
-                            Name = "ADMIN",
-                            Description = "full access"
+                            Id = -1,
+                            Description = "full access",
+                            Name = "ADMIN"
                         },
                         new
                         {
-                            Name = "CREATOR",
-                            Description = "create and read access"
+                            Id = -2,
+                            Description = "create and read access",
+                            Name = "CREATOR"
                         },
                         new
                         {
-                            Name = "READER",
-                            Description = "read access"
+                            Id = -3,
+                            Description = "read access",
+                            Name = "READER"
                         });
                 });
 
@@ -366,13 +411,12 @@ namespace RegisterOfIS.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleName");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("users", (string)null);
 
@@ -382,43 +426,21 @@ namespace RegisterOfIS.Migrations
                             Id = -1,
                             Login = "admin",
                             Password = "$2a$11$hmuUGLf.gBactT0CH3GWzOiQyRkZf3oDy2TNgYd1ttc2AL5rm.h.y",
-                            RoleName = "ADMIN"
+                            RoleId = -1
                         },
                         new
                         {
                             Id = -2,
                             Login = "reader",
                             Password = "$2a$11$ibU9O5Nsfi0TeS7J7GHpqOCE6FapVU3Y5RtzAEOKKQph3CgDLnrJy",
-                            RoleName = "READER"
+                            RoleId = -3
                         });
                 });
 
-            modelBuilder.Entity("AttributeStatementInfSystem", b =>
-                {
-                    b.HasOne("RegisterOfIS.Models.AttributeStatement", null)
-                        .WithMany()
-                        .HasForeignKey("AttributeStatementsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RegisterOfIS.Models.InfSystem", null)
-                        .WithMany()
-                        .HasForeignKey("InfSystemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RegisterOfIS.Models.Attribute", b =>
-                {
-                    b.HasOne("RegisterOfIS.Models.InfSystem", null)
-                        .WithMany("Attributes")
-                        .HasForeignKey("InfSystemId");
-                });
-
-            modelBuilder.Entity("RegisterOfIS.Models.AttributeStatement", b =>
+            modelBuilder.Entity("RegisterOfIS.Models.AttributeDict", b =>
                 {
                     b.HasOne("RegisterOfIS.Models.Attribute", "Attribute")
-                        .WithMany("States")
+                        .WithMany("Dict")
                         .HasForeignKey("AttributeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -426,11 +448,32 @@ namespace RegisterOfIS.Migrations
                     b.Navigation("Attribute");
                 });
 
+            modelBuilder.Entity("RegisterOfIS.Models.AttributeState", b =>
+                {
+                    b.HasOne("RegisterOfIS.Models.Attribute", "Attribute")
+                        .WithMany("States")
+                        .HasForeignKey("AttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("attribute_state_attribute_fkey");
+
+                    b.HasOne("RegisterOfIS.Models.InfSystem", "InfSystem")
+                        .WithMany("AttributeStates")
+                        .HasForeignKey("InfSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("attribute_state_inf_system_fkey");
+
+                    b.Navigation("Attribute");
+
+                    b.Navigation("InfSystem");
+                });
+
             modelBuilder.Entity("RegisterOfIS.Models.User", b =>
                 {
                     b.HasOne("RegisterOfIS.Models.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleName")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired()
                         .HasConstraintName("user_role_id_fkey");
@@ -440,12 +483,14 @@ namespace RegisterOfIS.Migrations
 
             modelBuilder.Entity("RegisterOfIS.Models.Attribute", b =>
                 {
+                    b.Navigation("Dict");
+
                     b.Navigation("States");
                 });
 
             modelBuilder.Entity("RegisterOfIS.Models.InfSystem", b =>
                 {
-                    b.Navigation("Attributes");
+                    b.Navigation("AttributeStates");
                 });
 
             modelBuilder.Entity("RegisterOfIS.Models.Role", b =>

@@ -1,22 +1,21 @@
-﻿using RegisterOfIS.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RegisterOfIS.Requests;
+using System.Diagnostics.CodeAnalysis;
 using Attribute = RegisterOfIS.Models.Attribute;
+using RegisterOfIS.Models;
 
 namespace RegisterOfIS.Interfaces
 {
     public interface IAttributeService
     {
-        List<Attribute>? GetAttributesByPartOfName(string partOfName);
-        Task<Attribute?> GetAttributeByFullName(string fullName);
-        List<Attribute>? GetAttributesByStateContain(string state);
-        Task<bool> CreateAttribute(string name, string description, List<string> states);
-        Task<bool> DeleteAttribute(string name);
-        Task<bool> AddNewState(string name, string state);
-        Task<bool> RemoveState(string name, string state);
-        Task<bool> ChangeAttribute(string name, string newName, string description);
+        Attribute? Find([NotNull] int id);
+        Attribute Get(int id);
+        Task<List<Attribute>> Search(SearchAtrributesForm form);
+        Task<Attribute?> Create(CreateAttributeRequest data);
+        Task<Attribute?> Update(int id, ChangeAttributeRequest data);
+        void Delete(int id);
+
+        List<string> GetDict(int id);
+        Task<bool> AddDict(int id, List<string> data);
+        Task<bool> RemoveDict(int id, List<string> data);
     }
 }

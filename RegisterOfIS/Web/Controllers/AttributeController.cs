@@ -2,6 +2,8 @@
 using RegisterOfIS.Requests;
 using RegisterOfIS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Attribute = RegisterOfIS.Models.Attribute;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RegisterOfIS.Controllers
 {
@@ -12,62 +14,55 @@ namespace RegisterOfIS.Controllers
     public class AttributeController(IAttributeService service) : ControllerBase
     {
         private readonly IAttributeService _attributeService = service;
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateNewAttribute([FromBody] CreateAttributeRequest request)
-        {
-            if(await _attributeService.CreateAttribute(request.Name, request.Description, request.States))
-            {
-                return Ok("created");
-            }
-            return Ok("Attribute with this name already exists");
-        }
-        [HttpGet("getattributes")]
-        public async Task<IActionResult> GetAllAttributes()
-        {
-            var attrs = _attributeService.GetAttributesByPartOfName("");
-            if (attrs == null)
-            {
-                return Ok("No attributes exist");
-            }
-            return Ok(attrs);
-        }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteAttribute([FromBody] DeleteAttribute request)
-        {
-            if(await _attributeService.DeleteAttribute(request.Name))
-            {
-                return Ok("Deleted");
-            }
-            return Ok("Attribute with this name does not exist");
-        }
 
 
-        [HttpPut("addState")]
-        public async Task<IActionResult> AddNewState([FromBody] AddNewStateRequest request)
+        [HttpGet]
+        public async Task<ActionResult<List<Attribute>>> SearchAttributes([FromQuery] [AllowNull] SearchAtrributesForm form)
         {
-            if (await _attributeService.AddNewState(request.Name, request.Value))
-            {
-                return Ok("Added");
-            }
-            return Ok("Something went wrong");
+            return Ok(await _attributeService.Search(form));
         }
 
-        [HttpPut("removeState")]
-        public async Task<IActionResult> RemoveState([FromBody] RemoveStateRequest request)
+        [HttpGet("{id}")]
+        public ActionResult<Attribute> GetAttributeById([FromRoute] int id)
         {
-            if (await _attributeService.RemoveState(request.Name, request.Value))
-            {
-                return Ok("Removed");
-            }
-            return Ok("Something went Wrong");
+            return Ok(_attributeService.Get(id));
         }
 
-        [HttpPut("change")]
-        public async Task<IActionResult> ChangeAttribute([FromBody] ChangeAttributeRequest request)
+        [HttpPost]
+        public async Task<ActionResult<Attribute>> CreateAttribute([FromBody] CreateAttributeRequest request)
         {
-            if (await _attributeService.ChangeAttribute(request.Name, request.NewName, request.Description)) return Ok(true);
-            return Ok(false);
+            return Ok(await _attributeService.Create(request));
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Attribute>> UpdateAttribute([FromRoute] int id, [FromBody] ChangeAttributeRequest request)
+        {
+            return Ok(await _attributeService.Update(id, request));
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult<string> DeleteAttribute([FromRoute] int id)
+        {
+            _attributeService.Delete(id);
+            return NoContent();
+        }
+
+        [HttpGet("{id}/Dict")]
+        public ActionResult<List<string>> GetDict([FromRoute] int id)
+        {
+            return Ok(_attributeService.GetDict(id));
+        }
+
+        [HttpPut("{id}/Dict")]
+        public async Task<IActionResult> AddDict([FromRoute] int id, [FromBody] List<string> data)
+        {
+            return Ok(await _attributeService.AddDict(id, data));
+        }
+
+        [HttpDelete("{id}/Dict")]
+        public async Task<IActionResult> RemoveDict([FromRoute] int id, [FromBody] List<string> data)
+        {
+            return Ok(await _attributeService.RemoveDict(id, data));
+        }
     }
 }

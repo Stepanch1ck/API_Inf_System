@@ -11,39 +11,47 @@ namespace RegisterOfIS.Database.DbConfig
 
             e.ToTable("attributes");
 
+            e.HasMany(a => a.Dict)
+                .WithOne(d => d.Attribute)
+                .HasForeignKey(d => d.AttributeId);
+
             e.HasMany(a => a.States)
                 .WithOne(s => s.Attribute)
                 .HasForeignKey(a => a.AttributeId);
 
+            e.HasMany(a => a.InfSystems)
+                .WithMany(ins => ins.Attributes)
+                .UsingEntity<AttributeState>();
+
             e.HasData(
-                new Models.Attribute("Purpose", "Назначение", new List<AttributeStatement>() { }) { Id = -1 },
-                new Models.Attribute("WhenStartedUsing", "Дата ввода в эксплуатацию", new List<AttributeStatement>() { }) { Id = -2 },
-                new Models.Attribute("Developer", "Разработчик", new List<AttributeStatement>() { }) { Id = -3 },
-                new Models.Attribute("LicenseInformation", "Информация по лицензиям", new List<AttributeStatement>() { }) { Id = -4 },
-                new Models.Attribute("Business-Planning", "Бизнес-Планирование", new List<AttributeStatement>() { }) { Id = -5 },
-                new Models.Attribute("UsingSphere", "Область применения(бизнес-процессы)", new List<AttributeStatement>() { }) { Id = -6 },
-                new Models.Attribute("BaseFunctions", "Основные Функции", new List<AttributeStatement>() { }) { Id = -7 },
-                new Models.Attribute("ResponsibleDepartment", "Ответственное за работу ИС структурноое подразделение", new List<AttributeStatement>() { }) { Id = -8 },
-                new Models.Attribute("ResponsiblePersonContacts", "Контакты ответственного должностного лица", new List<AttributeStatement>() { }) { Id = -9 },
-                new Models.Attribute("InformationEditDate", "Дата внесения изменений в сведения о ИС", new List<AttributeStatement>() { }) { Id = -10 },
-                new Models.Attribute("ServerOS", "Серверная ОС", new List<AttributeStatement>() { }) { Id = -11 },
-                new Models.Attribute("CLientOS", "Клиентские ОС", new List<AttributeStatement>() { }) { Id = -12 },
-                new Models.Attribute("DataBase", "СУБД", new List<AttributeStatement>() { }) { Id = -13 },
-                new Models.Attribute("AdditionalSoftware", "Дополнительное прикладное ПО", new List<AttributeStatement>() { }) { Id = -14 },
-                new Models.Attribute("NumberOfJobs", "Количество рабочих мест", new List<AttributeStatement>() { }) { Id = -15 },
-                new Models.Attribute("RoleAccessAvailability", "Наличие ролевого доступа", new List<AttributeStatement>() { }) { Id = -16 },
-                new Models.Attribute("UserAuthorizationMethods", "Способы авторизации пользователей", new List<AttributeStatement>() { }) { Id = -17 },
-                new Models.Attribute("InformationUpdateFrequency", "Периодичность обновления информации", new List<AttributeStatement>() { }) { Id = -18 },
-                new Models.Attribute("InformationStoragePeriod", "Срок хранения информации", new List<AttributeStatement>() { }) { Id = -19 },
-                new Models.Attribute("ISArchitecture", "Архитектура ИС", new List<AttributeStatement>() { }) { Id = -20 },
-                new Models.Attribute("ListOfServersAndRoles", "Список серверов и их функциональные роли", new List<AttributeStatement>() { }) { Id = -21 },
-                new Models.Attribute("UserManualAvailability", "Наличие руководства пользователя ИС", new List<AttributeStatement>() { }) { Id = -22 },
-                new Models.Attribute("AdminManualAvailability", "Наличие руководства администратора ИС", new List<AttributeStatement>() { }) { Id = -23 },
-                new Models.Attribute("ListOfISComponentsWithStack", "Список компонентов ИС с указанием стека (средств разработки)", new List<AttributeStatement>() { }) { Id = -24 },
-                new Models.Attribute("SourceCodeInCorporateREpositoryAvailability", "Наличие исходных кодов ИС в корпоративном репозитории", new List<AttributeStatement>() { }) { Id = -25 },
-                new Models.Attribute("DescriptonOfExternalAPIs", "Описание внешнего (интеграционного) API ИС (при наличии)", new List<AttributeStatement>() { }) { Id = -26 },
-                new Models.Attribute("ListOfIntegratedISAndDescriptionOfTransmittedData", "Список интегрируемых ИС, направление и описание передаваемых данных", new List<AttributeStatement>() { }) { Id = -27 },
-                new Models.Attribute("OtherIPInformationLinks", "Прочие информационные ссылки по ИС", new List<AttributeStatement>() { }) { Id = -28 }
+                new Models.Attribute("Purpose", "Назначение", false, new List<AttributeState>() { }) { Id = -1 },
+                new Models.Attribute("WhenStartedUsing", "Дата ввода в эксплуатацию", false, new List<AttributeState>() { }) { Id = -2 },
+                new Models.Attribute("Developer", "Разработчик", false, new List<AttributeState>() { }) { Id = -3 },
+                new Models.Attribute("LicenseInformation", "Информация по лицензиям", false, new List<AttributeState>() { }) { Id = -4 },
+                new Models.Attribute("Business-Planning", "Бизнес-Планирование", false, new List<AttributeState>() { }) { Id = -5 },
+                new Models.Attribute("UsingSphere", "Область применения(бизнес-процессы)", false, new List<AttributeState>() { }) { Id = -6 },
+                new Models.Attribute("BaseFunctions", "Основные Функции", false, new List<AttributeState>() { }) { Id = -7 },
+                new Models.Attribute("ResponsibleDepartment", "Ответственное за работу ИС структурноое подразделение", false, new List<AttributeState>() { }) { Id = -8 },
+                new Models.Attribute("ResponsiblePersonContacts", "Контакты ответственного должностного лица", false, new List<AttributeState>() { }) { Id = -9 },
+                new Models.Attribute("InformationEditDate", "Дата внесения изменений в сведения о ИС", false, new List<AttributeState>() { }) { Id = -10 },
+                new Models.Attribute("ServerOS", "Серверная ОС", false, new List<AttributeState>() { }) { Id = -11 },
+                new Models.Attribute("CLientOS", "Клиентские ОС", false, new List<AttributeState>() { }) { Id = -12 },
+                new Models.Attribute("DataBase", "СУБД", false, new List<AttributeState>() { }) { Id = -13 },
+                new Models.Attribute("AdditionalSoftware", "Дополнительное прикладное ПО", false, new List<AttributeState>() { }) { Id = -14 },
+                new Models.Attribute("NumberOfJobs", "Количество рабочих мест", false, new List<AttributeState>() { }) { Id = -15 },
+                new Models.Attribute("RoleAccessAvailability", "Наличие ролевого доступа", false, new List<AttributeState>() { }) { Id = -16 },
+                new Models.Attribute("UserAuthorizationMethods", "Способы авторизации пользователей", false, new List<AttributeState>() { }) { Id = -17 },
+                new Models.Attribute("InformationUpdateFrequency", "Периодичность обновления информации", false, new List<AttributeState>() { }) { Id = -18 },
+                new Models.Attribute("InformationStoragePeriod", "Срок хранения информации", false, new List<AttributeState>() { }) { Id = -19 },
+                new Models.Attribute("ISArchitecture", "Архитектура ИС", false, new List<AttributeState>() { }) { Id = -20 },
+                new Models.Attribute("ListOfServersAndRoles", "Список серверов и их функциональные роли", false, new List<AttributeState>() { }) { Id = -21 },
+                new Models.Attribute("UserManualAvailability", "Наличие руководства пользователя ИС", false, new List<AttributeState>() { }) { Id = -22 },
+                new Models.Attribute("AdminManualAvailability", "Наличие руководства администратора ИС", false, new List<AttributeState>() { }) { Id = -23 },
+                new Models.Attribute("ListOfISComponentsWithStack", "Список компонентов ИС с указанием стека (средств разработки)", false, new List<AttributeState>() { }) { Id = -24 },
+                new Models.Attribute("SourceCodeInCorporateREpositoryAvailability", "Наличие исходных кодов ИС в корпоративном репозитории", false, new List<AttributeState>() { }) { Id = -25 },
+                new Models.Attribute("DescriptonOfExternalAPIs", "Описание внешнего (интеграционного) API ИС (при наличии)", false, new List<AttributeState>() { }) { Id = -26 },
+                new Models.Attribute("ListOfIntegratedISAndDescriptionOfTransmittedData", "Список интегрируемых ИС, направление и описание передаваемых данных", false, new List<AttributeState>() { }) { Id = -27 },
+                new Models.Attribute("OtherIPInformationLinks", "Прочие информационные ссылки по ИС", false, new List<AttributeState>() { }) { Id = -28 }
                 );
         }
     }

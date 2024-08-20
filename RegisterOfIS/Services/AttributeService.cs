@@ -4,6 +4,9 @@ using RegisterOfIS.Models;
 using RegisterOfIS.Database;
 using Attribute = RegisterOfIS.Models.Attribute;
 using Microsoft.IdentityModel.Tokens;
+using RegisterOfIS.Requests;
+using System.Diagnostics.CodeAnalysis;
+using LinqKit;
 
 namespace RegisterOfIS.Services
 {
@@ -11,160 +14,108 @@ namespace RegisterOfIS.Services
     {
         private readonly PostgresDbContext _dbContext = dbContext;
 
-        public async Task<bool> AddNewState(string name, string state)
+        private async Task<bool> ExistsById(int id)
         {
-            #region Найти аттрибут по имени
-            var attribute = await GetAttributeByFullName(name);
-            #endregion
-
-            #region Вернуть false если нет аттрибута
-            if (attribute == null) return false;
-            #endregion
-
-            #region Вернуть false если уже есть такое значение
-            if (attribute.States.Select(st => st.Value).Contains(state)) return false;
-            #endregion
-
-            #region Добавить новое значение
-            var tempAttrStatement = new AttributeStatement(attribute, state);
-            attribute.States.Add(tempAttrStatement);
-            await _dbContext.AttributeStatements.AddAsync(tempAttrStatement);
-            await _dbContext.SaveChangesAsync();
-            return true;
-            #endregion
+            return await _dbContext.Attributes.Where(a => a.Id.Equals(id)).FirstOrDefaultAsync() != null;
         }
 
-        public async Task<bool> CreateAttribute(string name, string description, List<string> states)
+        private async Task<bool> ExistsByName(string name)
         {
-            #region Проверка на существование аттрибута
-            if (await GetAttributeByFullName(name) != null) return false;
-            #endregion
+            return await _dbContext.Attributes.Where(a => a.Name.Equals(name)).FirstOrDefaultAsync() != null;
+        }
+
+        public Attribute? Find([NotNull] int id)
+        {
+            return _dbContext.Attributes
+                .Include(a => a.Dict)
+                .Where(attr => attr.Id.Equals(id))
+                .FirstOrDefault();
+        }
+
+        public Attribute Get(int id)
+        {
+            return Find(id) ?? throw new ArgumentNullException();
+        }
+
+        public async Task<List<Attribute>> Search(SearchAtrributesForm form)
+        {
+            var predicate = PredicateBuilder.New<Attribute>(true);
+
+            var result = _dbContext.Attributes
+                .AsNoTracking()
+                .AsExpandable();
+
+            if (!form.Name.IsNullOrEmpty())
+            {
+                predicate.And(a => a.Name.StartsWith(form.Name));
+            }
+            if (!form.State.IsNullOrEmpty())
+            {
+                predicate.And(a => a.Dict.Select(d => d.Value).Contains(form.State));
+            }
+            return await result.Where(predicate).ToListAsync();
+        }
+
+        public async Task<Attribute?> Create(CreateAttributeRequest data)
+        {
+            if (await ExistsByName(data.Name)) return null;
+
 
             else
             {
-                #region Создать переменные для создания аттрибута
-                var tempAttrStatements = new List<AttributeStatement>();
-                var tempAttribute = new Attribute();
-                #endregion
+                Attribute attribute = new Attribute(data.Name, data.Description, data.IsFixed);
+                await _dbContext.Attributes.AddAsync(attribute);
 
-                #region Заполнить список со значениями
-                if(states != null)
-                {
-                    foreach (var state in states)
-                    {
-                        if (!state.IsNullOrEmpty())
-                        {
-                            var tempStatement = new AttributeStatement(tempAttribute, state);
-                            await _dbContext.AttributeStatements.AddAsync(tempStatement);
-                            tempAttrStatements.Add(tempStatement);
-                        }
-                    }
-                }
-                #endregion
-
-                #region Заполнение аттрибута
-                tempAttribute.States = tempAttrStatements;
-                tempAttribute.Description = description;
-                tempAttribute.Name = name;
-                #endregion
-
-                #region Добавление аттрибута в бд
-                await _dbContext.Attributes.AddAsync(tempAttribute);
+                List<AttributeDict> dict = data.States.ConvertAll(s => new AttributeDict(attribute, s));
+                attribute.Dict = dict;
                 await _dbContext.SaveChangesAsync();
-                return true;
-                #endregion
+                return attribute;
             }
-
         }
 
-        public async Task<bool> DeleteAttribute(string name)
+        public async Task<Attribute?> Update(int id, ChangeAttributeRequest data)
         {
-            #region Нати аттрибут по фулл имени
-            var attr = await GetAttributeByFullName(name);
-            #endregion
+            Attribute attribute = Get(id);
 
-            #region Вернуть false если нет такого
-            if (attr == null) return false;
-            #endregion
-
-            #region Удалить аттрибут
-            _dbContext.Attributes.Remove(attr);
+            attribute.Name = data.Name;
+            attribute.Description = data.Description;
+            attribute.IsFixed = data.IsFixed;
             await _dbContext.SaveChangesAsync();
-            return true;
-            #endregion
+            return attribute;
+        } 
 
+        public void Delete(int id)
+        {
+            _dbContext.Attributes.Remove(Get(id));
         }
 
-        public List<Attribute>? GetAttributesByPartOfName(string partOfName)
+        public List<string> GetDict(int id)
         {
-            #region Вытащить аттрибуты с БД
-            var attributes = _dbContext.Attributes.Include(attr => attr.States).Where(attribute => attribute.Name.Contains(partOfName));
-            #endregion
-
-            #region Вернуть null если аттрибутов нет
-            if (attributes.FirstOrDefault() == null) return null;
-            #endregion
-
-            #region вернуть аттрибуты
-            return [.. attributes];
-            #endregion
+            return Get(id).Dict.Select(d => d.Value).ToList();
         }
 
-        public List<Attribute>? GetAttributesByStateContain(string state)
+        public async Task<bool> AddDict(int id, List<string> data)
         {
-            #region Поиск аттрибутов по наличию значения
-            var attributes = _dbContext.Attributes.Include(attr => attr.States).Where(attr => attr.States.Select(st => st.Value).Contains(state));
-            #endregion
-
-            #region Вернуть null Если там пусто
-            if (attributes.FirstOrDefault() == null) return null;
-            #endregion
-
-            #region Вернуть аттрибуты
-            return [.. attributes];
-            #endregion
-        }
-
-        public async Task<bool> RemoveState(string name, string state)
-        {
-            #region Найти аттрибут по имени
-            var attribute = await GetAttributeByFullName(name);
-            #endregion
-
-            #region Вернуть false если нет такого аттрибута
-            if (attribute == null) return false;
-            #endregion
-
-            #region Вернуть false если нет такого значения
-            else if (!attribute.States.Select(st => st.Value).Contains(state)) return false;
-            #endregion
-
-            #region Найти Значение у аттрибута
-            var tempstate = attribute.States.Where(val => val.Value.Equals(state)).Single();
-            #endregion
-
-            #region Удалить значение у этого аттрибута
-            attribute.States.Remove(tempstate);
+            var attribute = Get(id);
+            var values = attribute.Dict.Select(st => st.Value);
+            List<AttributeDict> dict = data.Where(d => !values.Contains(d))
+                .ToList()
+                .ConvertAll(d => new AttributeDict(attribute, d));
+            ((List<AttributeDict>)attribute.Dict).AddRange(dict);
+            
             await _dbContext.SaveChangesAsync();
+
             return true;
-            #endregion
         }
 
-        public async Task<Attribute?> GetAttributeByFullName(string fullName)
+        public async Task<bool> RemoveDict(int id, List<string> data)
         {
-            #region Вернуть атррибут по фулл имени
-            return _dbContext.Attributes.Include(attr => attr.States).Where(attr => attr.Name.Equals(fullName)).FirstOrDefault();
-            #endregion
-        }
-
-        public async Task<bool> ChangeAttribute(string name, string newName, string description)
-        {
-            var attr = await GetAttributeByFullName(name);
-            if (attr == null) return false;
-            if(newName != null) attr.Name = newName;
-            if(description != null) attr.Description = description;
+            var attribute = Get(id);
+            
+            bool result = ((List<AttributeDict>)attribute.Dict).RemoveAll(d => data.Contains(d.Value)) >= 1;
             await _dbContext.SaveChangesAsync();
-            return true;
+
+            return result;
         }
     }
 }
