@@ -13,7 +13,6 @@ namespace RegisterOfIS.Models
         public int Id { get; set; }
         [JsonIgnore]
         public int AttributeId { get; set; }
-        public string AttributeName { get; set; }
         [JsonIgnore]
         public Attribute Attribute { get; set; }
         public string Value { get; set; }
@@ -27,7 +26,6 @@ namespace RegisterOfIS.Models
         {
             this.Attribute = attribute;
             this.Value = value;
-            this.AttributeName = attribute.Name;
         }
     }
 }

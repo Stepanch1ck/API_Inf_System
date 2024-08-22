@@ -1,0 +1,14 @@
+﻿using RegistryOfInformationSystems.Models;
+
+namespace RegistryOfInformationSystems.Interfaces
+{
+    public interface IUserService
+    {
+        User? GetByLogin(string login);
+        Task<List<User>?> GetByRole(string role);
+        Task<bool> CreateUser(string login, string password, string role);
+        Task<bool> DeleteUser(string login);
+        Task<bool> ChangeUser(string login, string newPassword, string role);
+        Task<List<User>> GetAllUsers();
+    }
+}

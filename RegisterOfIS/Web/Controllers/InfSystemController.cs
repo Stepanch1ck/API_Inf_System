@@ -46,15 +46,5 @@ namespace RegisterOfIS.Controllers
             return Ok(await _infSystemService.UpdateInformationSystem(request.Name, request.newName, request.newDescription ,request.AttrNames, request.AttrValues));
         }
 
-        [HttpGet("GetISWithAttribute")]
-        public async Task<IActionResult> GetISByAttributes([FromQuery] GetInfSystemWithAttribute request)
-        {
-            var systems = _infSystemService.GetInformationSystemsByAttributeContain(request.AttrName);
-            if (systems == null)
-            {
-                return Ok("No IS with this attribute");
-            }
-            return Ok(systems);
-        }
     }
 }

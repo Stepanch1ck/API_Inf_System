@@ -8,15 +8,6 @@ namespace RegisterOfIS.Database.DbConfig
     {
         public void Configure(EntityTypeBuilder<User> e)
         {
-
-            e.ToTable("users");
-
-            e.HasOne(us => us.Role)
-                .WithMany(role => role.Users)
-                .HasForeignKey(u => u.RoleName)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("user_role_id_fkey");
-
             e.HasData(
                 new User { Id = -1, Login = "admin", RoleName = "ADMIN", 
                     Password = "$2a$11$hmuUGLf.gBactT0CH3GWzOiQyRkZf3oDy2TNgYd1ttc2AL5rm.h.y" }, // password = admin

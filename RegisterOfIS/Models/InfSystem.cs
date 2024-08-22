@@ -14,8 +14,6 @@ namespace RegisterOfIS.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public ICollection<AttributeStatement> AttributeStatements { get; set; } = [];
-        [JsonIgnore]
-        public ICollection<Attribute> Attributes { get; set; } = [];
         public InfSystem() { }
         public InfSystem(string name, string description, List<AttributeStatement> statements)
         {

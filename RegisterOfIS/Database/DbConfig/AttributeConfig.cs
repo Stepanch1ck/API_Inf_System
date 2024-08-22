@@ -8,13 +8,6 @@ namespace RegisterOfIS.Database.DbConfig
     {
         public void Configure(EntityTypeBuilder<Models.Attribute> e)
         {
-
-            e.ToTable("attributes");
-
-            e.HasMany(a => a.States)
-                .WithOne(s => s.Attribute)
-                .HasForeignKey(a => a.AttributeId);
-
             e.HasData(
                 new Models.Attribute("Purpose", "Назначение", new List<AttributeStatement>() { }) { Id = -1 },
                 new Models.Attribute("WhenStartedUsing", "Дата ввода в эксплуатацию", new List<AttributeStatement>() { }) { Id = -2 },
